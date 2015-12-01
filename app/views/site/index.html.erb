@@ -1,0 +1,7 @@
+<h1>Hello, World!</h1>
+
+<% @skills.all.each do |skill| %>
+  <h3><%= skill.name %></h3>
+  <p><%= skill.details %></p>
+  <p><strong>Level:</strong><%= skill.name %></p>
+<% end %>

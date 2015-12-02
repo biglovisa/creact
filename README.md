@@ -88,6 +88,48 @@ Now we just need to connect our Rails views to our (yet non-existent) React code
 $ touch app/assets/javascripts/components/_main.js.jsx
 ```
 
+We need to establish a connection between the Rails view and the main component. To render `_main.js.jsx` in our root we need to add the view helper we get from react-rails. It puts a div on the page with the requested component class. Go ahead and delete the old code. Since we use React as our view layer, our Rails views are next to empty (as they should be).
+
+```
+app/views/site/index.html.erb
+
+<%= react_component 'Main' %>
+```
+
+### 3. Component Hierarchy
+
+We will end up having multiple components, but they will all stem from the main one. Components have parent-child relationships so if component Cat renders component Kitten, Cat is the parent of Kitten. For example, let's say we are building the component hierarchy for a site with a header, a side bar and tweets.
+
+>
+> The notation for rendering React components is <ComponentName />
+>
+
+The main component, `<Main />`, would render the `<Header />` and `<Body />` component. The `Header` and the `Body` exist independently of each other but they need to know about similar data such as the current user or which link in the header was clicked. We can store all that information and keep track of the current state of our application in `Main` and pass it to `Header` and `Body`. By storing the data in one place we are also only updating the data in one place - we have a so-called Single Source of Truth, one place where data is stored and updated.
+
+In `<Body />`, we render `<Tweets />` and `<Ads />`. `Tweets` and `Ads` don't really depend on the same data but rendering both of them in the `Body` makes sense in this case. Finally, `<Tweets />` renders an entire collection of `<Tweet />`. Each individual tweet is a single component to keep it DRY:*Don't Repeat Yourself*.
+
+```
+          Main
+        /      \  
+       /        \
+    Header       Body
+                /     \
+             Ads     Tweets
+                          \___  
+                              \___
+                              |   Tweet
+                              |       _\_  
+                              |      /    \
+                              |  Body   TweetOptionsBars       
+                              |
+                              |___
+                              |   Tweet
+                              |       _\_  
+                              |      /    \
+                              |  Body   TweetOptionsBars       
+                              |
+```
+
 The `.js.jsx` extension is similar to `html.erb`. You are telling the browser that you are giving it jsx/erb and asking if it could please render js/html.
 
 ```
@@ -104,5 +146,6 @@ var Main = React.createClass({
 });
 ```
 
-
-The code we currently render at `http://localhost:3000` could be split into 3 components. One component that renders the title of the page, one component that renders all of the skills, and each individual skill would be its own component. https://facebook.github.io/react/docs/thinking-in-react.html
+additional resources:
+- (Thinking in React)[https://facebook.github.io/react/docs/thinking-in-react.html]
+- (Video)[http://tagtree.tv/thinking-in-react] tutorial that walks through the code used in above article

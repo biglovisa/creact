@@ -149,3 +149,73 @@ var Main = React.createClass({
 additional resources:
 - (Thinking in React)[https://facebook.github.io/react/docs/thinking-in-react.html]
 - (Video)[http://tagtree.tv/thinking-in-react] tutorial that walks through the code used in above article
+
+### 4. Hello, Creact!
+
+We did it! We have copy-pasted our first component and our Rails view is empty. Let's take a closer look at `Main`.
+
+We have built a component and given it a name. It has only one function, `render()`. When a React component is mounted on the DOM, its `render()` method will execute and also trigger all of the component's children's `render()` methods. The code that is in the `return` statement is the JSX that will render on the page. Right now our HTML looks like regular HTML, but soon we will add in some JavaScript so it becomes more dynamic. Each React component can only return one HTML element, so all JSX needs to be wrapped in one wrapper div.
+
+Bad - returning sibling HTML elements that aren't wrapped by a shared parent div will make your program fail.
+```
+return (
+  <div>
+    <h1>Hello, Creact!</h1>
+  </div>
+  <div>
+    <p>All of the contents</p>
+  </div>
+)
+```
+
+Better - we have multiple sibling HTML elements which share a parent div. We return one HTML element and our JSX is valid.
+```
+return (
+  <div>
+    <div>
+      <h1>Hello, Creact!</h1>
+    </div>
+    <div>
+      <p>All of the contents</p>
+    </div>
+  </div>
+)
+```
+
+Let's build a component hierarchy. We will build out basic crud functionality; **create**/new, **read***/index, **update**/edit, **delete**/destroy. Our `Main` component could render a `Header` and a `Body`. In the `Body`, we need to be able to view all skills, view an individual skill, create a new skill and delete a skill. So, `Body` could render `<NewSkill >` and `<AllSkills />`. `AllSkills` renders a collection of individual `Skill` components - each `Skill` component has it's own delete button.  
+
+```
+         Main
+       /      \
+  Header        Body
+              /     \
+        NewSkill    AllSkills
+                        \  
+                        Skills * n
+```
+
+Let's remove our current `h1` and add `<Header />` in it's place.
+
+
+```
+app/assets/javascripts/components/_main.js.jsx
+
+var Main = React.createClass({
+  render() {
+    return (
+      <div>
+        <Header />
+      </div>
+    )
+  }
+});
+```
+
+We are rendering the `Header` component (still non-existent) in the `Main` component, `Header` is the child of `Main`.
+
+```
+$ touch app/assets/javascripts/components/_header.js.jsx
+```
+
+Our code for the `Header` component will look very similar to what we have in `Main`, but obviously we won't render the `Header` component in the return statement. For now, put an `h1` there with whatever text you want. Hop over to your browser to make sure the `h1` renders as it should. If not, take a look at what we first had in `Main`. The two are very similar. Let's leave the `Header` for now and move on to building out the body. We might come back a bit later to include the search functionality here.
+       

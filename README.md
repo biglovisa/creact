@@ -326,7 +326,7 @@ Let's help out React and add a key prop.
 ```
 var skills = this.state.skills.map((skill, index) => {
   return (
-    <div key={skill.id + index}>
+    <div key={index}>
       <h3>{skill.name}</h3>
       <p><strong>Level:</strong> {skill.level}</p>
       <p>{skill.details}</p>
@@ -336,3 +336,247 @@ var skills = this.state.skills.map((skill, index) => {
 ```  
 
 The second argument in a map iteration is the index, so let's use it and add unique key props for all the skills we render. Refresh, and voila - no more errors.
+
+### 6. Add a new skill
+
+Now it's time to create a `NewSkill` component which will be rendered in the `Body` component.
+
+```
+$ touch app/assets/javascripts/components/_new_skill.js.jsx
+```
+
+Just like we did with the previous components, add the bare minimum and put an `h1` in the return statement to make sure it's properly rendering on the page.
+
+```
+var NewSkill = React.createClass({
+  render() {
+    return (
+      <div>
+        <h1>new skill</h1>
+      </div>
+    )
+  }
+});
+```
+
+What do we need to create a new skill? We need a form where the user can enter a name and details and a submit button which will take the input from the form and send it over to our server using Ajax. Let's start with the form. We are just going to use regular HTML to get the form and the submit button on the page. We add the refs to input fields to be able to fetch their value using `this.refs.name.value && this.refs.details.value`.  
+
+```
+return (
+  <div>
+    <input ref='name' placeholder='Enter name of skill' />
+    <input ref='details' placeholder='Details' />
+    <button>Submit</button>
+  </div>
+)
+```
+
+Cool cool cool! But what happens when the user has entered a new skill and hits submit? Nothing. Let's add an event listener.
+
+```
+<button onClick={this.handleClick}>Submit</button>
+```
+
+`onClick` is a React event listener, take a look at the [docs](https://facebook.github.io/react/docs/events.html) to learn about more. We give the event listener some JavaScript code to evaluate whenever we click the button. Here, we are telling it to go execute the `handleClick` function - which we haven't yet written.
+
+```
+// var NewSkill = ...
+
+handleClick() {
+  console.log('in handle click!')
+},
+
+// render()....
+```
+
+Great! Now, we need to fetch the form values and send it over to the server to create a new skill. Let's log the form values to be sure we have access to them.
+
+```
+let name    = this.refs.name.value;
+let details = this.refs.details.value;
+console.log(name, details);
+```
+
+Let's send the form values over to the server so we can create a new skill.
+
+```
+handleClick() {
+  let name    = this.refs.name.value;
+  let details = this.refs.details.value;
+
+  $.ajax({
+    url: '/api/v1/skills',
+    type: 'POST',
+    data: { skill: { name: name, details: details } },
+    success: (response) => {
+      console.log('it worked!', response);
+    }
+  });
+},
+```
+
+We are making a POST request to '/api/v1/skills', sending over data and if we're successful, we log the response. Did it work? Create a new skill in the browser and check the browser console. Refresh the page to make sure your newly created skill is rendered on the page.
+
+But we don't want to refresh the page to see our new skills. We can do better.
+
+We store all the skills we get from the server as state in `AllSkills`. When we add a new skill, we could add it to the skills array so it will get rendered immediately with the other skills. `AllSkills` needs to read the values in the skills array and `NewSkill` wants to update that array. Both children of `Body` need access to the skills array so it make sense to store it as state in `Body` and give both children access to it.
+
+So let's move some code around. Move `getInitialState()` and `componentDidMount()` to `Body`. Now, we fetch the skills when `Body` is mounted on the DOM and we store them as state on the `Body` component.
+
+How does `AllSkills` get access to all the skills?
+
+Parents can send variables down its children as `props`. `Props` are immutable in the child. Let's send the skills array from the `Body` component to the `AllSkills` component as props.
+
+```
+<AllSkills skills={this.state.skills} />
+```
+
+We have one more change to do before the skills will render on the DOM. In `AllSkills` we are iterating over `this.state.skills`. Only problem is that we no longer have a state store on the component. `AllSkills` receives the skills as props from the parent, so instead of `this.state.skills` we need to ask for `this.props.skills`.
+
+```
+var skills = this.props.skills.map((skill, index) => {
+  return (
+    <div key={index}>
+      <h3>{skill.name}</h3>
+      <p><strong>Level:</strong> {skill.level}</p>
+      <p>{skill.details}</p>
+    </div>
+  )
+});
+```
+
+Like we can pass down values from parents to children, we can also pass function references that can be executed in the child.
+
+Let's starts from the `Body`. We want to build a function that's called `handleSubmit()` that will add the new skill to the skills array.
+
+```
+// getInitialState() and componentDidMount()
+
+handleSubmit(skill) {
+  console.log(skill);
+},
+
+// renders the AllSkills and NewSkill component
+```
+
+Then, we want to send a reference to this function down to the `NewSkill` component.
+
+```
+<NewSkill handleSubmit={this.handleSubmit} />
+```
+
+In the `NewSkill` component, we can call this function by adding parenthesis, just like a regular JavaScript function. In the `success` function, execute the `handleSubmit` function and give it the name and details as an object as an argument.
+
+```
+$.ajax({
+  url: '/api/v1/skills',
+  type: 'POST',
+  data: { skill: { name: name, details: details } },
+  success: (response) => {
+    this.props.handleSubmit({name: name, details: details, level: 0});
+  }
+});
+```
+
+Check your browser console to see if you get any output from `handleSubmit` in the `Body` component.
+
+```
+Object {name: "some name", details: "some details", level: 0}
+```
+
+Yes! Almost there!
+
+Now we need to add it to `this.state.skills`. We can use `concat()` to add the skill to the old state and then set the state with the new state.
+
+```
+handleSubmit(skill) {
+  let newState = this.state.skills.concat(skill);
+  this.setState({ skills: newState })
+},
+```
+
+That's it! We have successfully added a new skill that is rendered on the DOM immediately.
+
+Here is the code for `Body`, `AllSkills` and `NewSkill` in case you want to check your code.
+
+```
+app/assets/javascripts/components/_body.js.jsx
+
+var Body = React.createClass({
+  getInitialState() {
+    return { skills: [] }
+  },
+
+  componentDidMount() {
+    $.getJSON('/api/v1/skills.json', (response) => { this.setState({ skills: response }) });
+  },
+
+  handleSubmit(skill) {
+    let newState = this.state.skills.concat(skill);
+    this.setState({ skills: newState })
+  },
+
+  render() {
+    return (
+      <div>
+        <NewSkill handleSubmit={this.handleSubmit} />
+        <AllSkills skills={this.state.skills} />
+      </div>
+    )
+  }
+});
+```
+
+```
+app/assets/javascripts/components/_all_skills.js.jsx
+
+var AllSkills = React.createClass({
+  render() {
+    let skills = this.props.skills.map((skill, index) => {
+      return (
+        <div key={index}>
+          <h3>{skill.name}</h3>
+          <p><strong>Level:</strong> {skill.level}</p>
+          <p>{skill.details}</p>
+        </div>
+      )
+    });
+
+    return (
+      <div>
+        {skills}
+      </div>
+    )
+  }
+});
+```
+
+```
+app/assets/javascripts/components/_new_skill.js.jsx
+
+var NewSkill = React.createClass({
+  handleClick() {
+    let name    = this.refs.name.value;
+    let details = this.refs.details.value;
+
+    $.ajax({
+      url: '/api/v1/skills',
+      type: 'POST',
+      data: { skill: { name: name, details: details } },
+      success: (response) => {
+        this.props.handleSubmit({name: name, details: details, level: 0});
+      }
+    });
+  },
+
+  render() {
+    return (
+      <div>
+        <input ref='name' placeholder='Enter name of skill' />
+        <input ref='details' placeholder='Details' />
+        <button onClick={this.handleClick}>Submit</button>
+      </div>
+    )
+  }
+});
+```

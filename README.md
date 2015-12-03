@@ -218,4 +218,121 @@ $ touch app/assets/javascripts/components/_header.js.jsx
 ```
 
 Our code for the `Header` component will look very similar to what we have in `Main`, but obviously we won't render the `Header` component in the return statement. For now, put an `h1` there with whatever text you want. Hop over to your browser to make sure the `h1` renders as it should. If not, take a look at what we first had in `Main`. The two are very similar. Let's leave the `Header` for now and move on to building out the body. We might come back a bit later to include the search functionality here.
-       
+
+### 5. Rendering all skills
+
+Now it's time to render all skills on the page. First, we need to add a `Body` component in which our `NewSkill` and `AllSkills` components will live.         
+
+```
+$ touch app/assets/javascripts/components/_body.js.jsx
+$ touch app/assets/javascripts/components/_all_skills.js.jsx
+```
+
+Go ahead and add the "skeleton code" for both `Body` and `AllSkills`. `Body` should render `AllSkills`. Put an arbitrary `h1` in `AllSkills` so we can get some feedback on the page. At this point, two `h1`'s should be rendered on the page. If you don't, open up the dev tools (option + cmd + i) and see if you have any errors in the console. If they aren't useful, look over the syntax carefully and make sure it looks like what we have in `Main`.
+
+Our next step is to fetch all skills from the server. This is JavaScript so we will use Ajax to ping the index action of our Rails API to get all the skills from the database. It's important that our Ajax call is only executed once. It's expensive to make Ajax calls and depending on the scale of your applications, it can cause performance issues. React components have some built in methods available that we can use to make our coding life a bit easier. In this case, we want a method that renders once when the component is mounted on the DOM - similar to jQuerys's `$(document).ready()`. We are going to use `componentDidMount()` which is called right after the component is mounted. For more details about methods that are available to components and when to use them, check out the [docs](https://facebook.github.io/react/docs/component-specs.html).
+
+Functions we add to the component go above the `render()` statement. Let's add a `componentDidMount()` function and just `console.log()` something so we now it's being called.
+
+```
+var AllSkills = React.createClass({
+  componentDidMount() {
+    console.log('Hello');
+  },
+
+  render() {
+    return (
+      <div>
+        <h1>Hello from All Skills!</h1>
+      </div>
+    )
+  }
+});
+```
+
+Why is there a comma at the end of our function? Take a closer look at the syntax. When we write `var AllSkills = React.createClass( /* Code here */ )` we give it an object containing all the code for the component. Since elements in objects are comma separated, we put a comma at the end of our functions.
+
+Did you see the output from the `console.log()` in the browser console? Cool! Let's fetch some ideas.
+
+```
+$.getJSON('/api/v1/skills.json', (response) => { console.log(response) });
+```
+
+Make sure to take a look in the browser console, open up the objects to make sure everything looks good.
+
+Right now we are just logging the result to make sure we get the objects we want. Really, what we want to do is to store it on the component so we can more easily use it. Data that will change is stored as `state` on the component. In React, state is mutable, so data that will change throughout the program should be stored as state. There's another handy method we get from React; `getInitialState`. Here, we specify the initial values for all the states in the component (usually you have several). Let's create a state called `skills` and set it equal to an empty array.
+
+```
+var AllSkills = React.createClass({
+  getInitialState() {
+    return { skills: [] }  
+  },
+
+// rest of the component
+```
+
+Now, when we get the response back from the server, we want to update `skills` and set it to the value of the skills we got from the server. We want to store it as state becasue when we add new skills, we want to be able to render them on the page without having to ping the index action of our API again. By using another of React's built in methods, this isn't bad at all.
+
+```
+  $.getJSON('/api/v1/skills.json', (response) => { this.setState({ skills: response }) });
+```
+To be sure that we actually updated the state, let's log the state (`console.log(this.state)`) in the `render()` method. Make sure to put it outside of the return statement! You should see something like this in your browser console. Change the `console.log` to log `this.state.skills` and check out the difference.
+
+```
+> Object {skills: Array[0]}
+> Object {skills: Array[50]}
+```
+
+Why did we first get an empty array, and then immediately after an array with our 50 skills? `componentDidMount` runs immediately after the component has been mounted on the DOM. It already executed the `render()` method once before we had updated the state. Now that we have all skills as objects in an array, we can create DOM elements and render them on the page.
+
+We eventually want to create a `Skill` component for each object in the skills array. For now, let's just map over the objects in the array and create DOM nodes out of them. Since JSX is just HTML + JS, we can build HTML elements and insert JavaScript wherever we need it, similar to how we can insert Ruby in HTML elements using erb.
+
+```
+// componentDidMount() and getInitialState()
+
+render(
+  var skills = this.state.skills.map((skill) => {
+    return (
+      <div>
+        <h3>{skill.name}</h3>
+        <p><strong>Level:</strong> {skill.level}</p>
+        <p>{skill.details}</p>
+      </div>
+    )
+  });
+
+  return (
+    <div>
+      {skills}
+    </div>
+  )
+)
+```
+
+The return value from the `this.state.skills.map...` will be an array of HTML divs, each with an `h3` and two `p` tags. As you can see, inserted JavaScript needs to be enclosed in curly braces - the erb equivalent to this would be `<%= %>`. In the return statement we have replaced the silly `h1` tag with the skills array we built above. In the return statement we write JSX and our skills array is JavaScript, so in order for it to be evaluated it needs to be wrapped in curly braces. Head over to the browser and make sure it all works ok!
+
+You should see an error like this in the browser console:
+
+```
+Each child in an array or iterator should have a unique "key" prop. Check the render method of `AllSkills`. See https://fb.me/react-warning-keys for more information.
+```
+
+A key prop?
+
+When we are rendering multiple similar HTML elements - in our case, 50 of the same type - we need to supply each with a unique key. React uses a diffing algorithm to figure out which parts of your application has changed and needs to be rerendered. It uses the keys to identify DOM nodes. This is partially what makes React so fast and snappy in the browser. For more details on this topic, check out the [docs](https://facebook.github.io/react/docs/reconciliation.html).
+
+Let's help out React and add a key prop.
+
+```
+var skills = this.state.skills.map((skill, index) => {
+  return (
+    <div key={skill.id + index}>
+      <h3>{skill.name}</h3>
+      <p><strong>Level:</strong> {skill.level}</p>
+      <p>{skill.details}</p>
+    </div>
+  )
+});
+```  
+
+The second argument in a map iteration is the index, so let's use it and add unique key props for all the skills we render. Refresh, and voila - no more errors.

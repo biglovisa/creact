@@ -1,4 +1,4 @@
-# Cract
+# Creact
 ## Crud + React
 
 In this tutorial we are going to create a Rails API and a React front end to build

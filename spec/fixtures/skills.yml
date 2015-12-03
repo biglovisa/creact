@@ -1,0 +1,14 @@
+one:
+  name: Programming
+  details: Code all the time
+  level: 2
+
+two:
+  name: Eating
+  details: Eat all the time
+  level: 0
+
+three:
+  name: Cooking
+  details: Cook all the time
+  level: 1

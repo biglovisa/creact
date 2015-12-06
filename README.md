@@ -795,3 +795,355 @@ removeIdeaFromDOM(id) {
 ```
 
 Hop over to the browser and remove some skills... this is fantastic.
+
+### 8. Editing an idea
+
+The last and final crud functionality. We are rendering all skills on the page, we are creating new ones, we are deleting them and now we just need to be able to edit them.
+
+I just spent 15ish minutes researching HTML5's `contenteditable` tag (just learned about it this week and thought it would be cool to implement). Some StackOverflow's and blog posts said that it was a terrible to use with React. So we won't be using it in this tutorial. If you want to give it a go, please submit a PR with your solution (just append it to the end of this README).
+
+Instead, this is what we need to accomplish:
+
+1. Add an `Edit` button
+2. Add a click listener for the `Edit` button
+3. On click `Edit`, transform the text fields to input fields (alternatively render a new form below)
+4. When the user clicks the `Submit` button, grab the values from the input fields
+5. Send the updated values over to our Rails API to update the skill
+6. Update the skill and replace the old values with the new values   
+
+
+Let's start with `1` and `2`. Add an `Edit` button and add a click listener for it which takes us to a `handleEdit` function in the same component.
+
+```
+app/assets/javascripts/components/_all_skills.js.jsx
+
+// handleDelete()
+
+handleEdit() {
+  console.log('you are in edit!');
+},
+
+// render() and rest of the skill template
+
+<button onClick={this.handleEdit}>Edit</button>
+
+```
+
+Do you get feedback in your browser console when we click `Edit`? Cool.
+
+What needs to happen in `handleEdit()`? For the specific skill that the user asked to edit, add an edit form and let the user edit the values and then submit. If we were using jQuery, we could have just used jQuery's `$.append()` function. However, as this StackOverflow succintly puts it, it's not a [React way](http://stackoverflow.com/questions/31823801/how-to-append-and-prepend-element-in-react-js-like-jquery). We should render components conditionally based on our state and props.
+
+So if each skill needs to know whether or not its `Edit` button has been clicked (information which we should store as state), this seems like a good time to refactor out our current skill template in `AllSkills` to its own component.
+
+
+```
+$ touch app/assets/javascripts/components/_skill.js.jsx
+```  
+
+Here's how we iterate over the `this.props.skills` to create new skills. Notice that we need to send the skill, and references to `handleDelete()` and `handleEdit()` as props to `Skill`. This way we can access these values in `Skill` using the `this.props.*` notation.
+
+```
+app/assets/javascripts/components/_all_skills.js.jsx
+
+let skills = this.props.skills.map((skill, index) => {
+  return (
+    <div key={index}>
+      <Skill skill={skill}
+             handleDelete={this.handleDelete.bind(this, skill.id)}
+             handleEdit={this.handleEdit}/>
+    </div>
+  )
+});
+
+```
+
+
+In `Skill` we just return the entire template we removed from `AllSkills`. Notice how we changed the JSX to comply with our new setup.
+
+
+```
+app/assets/javascripts/components/_skill.js.jsx
+
+var Skill = React.createClass({
+  render() {
+    return (
+      <div>
+        <h3>{this.props.skill.name}</h3>
+        <p><strong>Level:</strong> {this.props.skill.level}</p>
+        <p>{this.props.skill.details}</p>
+
+        <button onClick={this.props.handleDelete}>
+          Delete
+        </button>
+
+        <button onClick={this.props.handleEdit}>Edit</button>
+      </div>
+    )
+  }
+});
+
+```
+
+Just to double check that we have wired things up correctly, go to the browser and make sure you can still delete skill and that it logs to the console when you click `Edit`.
+
+
+Now, when we click `Edit`, we want to set a state that will tell us that we are editing the skill. Change the click listener for the `Edit` button so we land in a function in the current component,
+
+
+```
+<button onClick={this.handleEdit}>Edit</button>
+```
+
+and add that function in the `Skill` component.
+
+
+```
+
+handleEdit() {
+  // something should happen here
+},
+
+```
+
+Now what? Add an initial state to the `Skill` component that defaults to `false`. In `handleEdit()` we need to set this state to true.
+
+
+```
+
+var Skill = React.createClass({
+  getInitialState() {
+    return { editable: false }
+  },
+
+  handleEdit() {
+    this.setState({ editable: true })
+  },
+
+
+  // render() etc..
+```
+
+
+And now what? We need to render the component conditionally based on our state. If `this.state.editable` is false, we want to render `h3` tag with the name and the `p` tag with the details as normal. If not, we want to render and input field for the name and a textarea for the details. Sounds like we need ternary operator.
+
+
+```
+
+// getInitialState() and handleEdit()...
+
+render() {
+  var name = this.state.editable ? <input type='text' defaultValue={this.props.skill.name} />
+                                 : <h3>{this.props.skill.name}</h3>
+
+  let details = this.state.editable ? <textarea type='text' defaultValue={this.props.skill.details}></textarea>
+                                    : <p>{this.props.skill.details}</p>
+  return (
+    <div>
+      {name}
+
+      <p><strong>Level:</strong> {this.props.skill.level}</p>
+      {details}
+
+      <button onClick={this.props.handleDelete}>
+        Delete
+      </button>
+
+      <button onClick={this.handleEdit}>Edit</button>
+    </div>
+  )
+}
+});
+
+```
+
+
+In the render function we are using a ternary operator to decide how we should render name/details. This is the React way. It doesn't matter what data we give our component, based on its state, props and the constraints we set up, we always know what the component will render. Head over to the browser and check it out! (The UI/UX is terrible because we don't have any CSS, feel free to customize it to your heart's content.)
+
+Let's transform the `Edit` button to a `Submit` button when we click `Edit`. We can use the `editable` state and a ternary directly in the JSX to change that.
+
+
+```
+<button onClick={this.handleEdit}>{this.state.editable ? 'Submit' : 'Edit' }</button>
+```
+
+Awesome.
+
+We can make a small change to how we update the state in `handleEdit()` to make it toggle between true/false.
+
+
+```
+handleEdit() {
+  this.setState({ editable: !this.state.editable })
+},
+```
+
+Even more awesome.
+
+But now, when we click `Submit`, we want to grab the updated values and send them over to the server to update the given skill. We can do this using component `refs`, same way we got the values from the input fields when we created new skills. Let's add the refs to the input field and the textarea in `Skill` (I forgot to carry those over when we extracted the skill to its own component).
+
+
+```
+var name = this.state.editable ? <input type='text'
+                                        ref='name'
+                                        defaultValue={this.props.skill.name} />
+                               : <h3>{this.props.skill.name}</h3>
+
+let details = this.state.editable ? <textarea type='text'
+                                              ref='notes'
+                                              defaultValue={this.props.skill.details}>
+                                    </textarea>
+                                  : <p>{this.props.skill.details}</p>
+```
+
+
+There are no strict rules on how you choose to format ternaries (as far as I'm concerned). The most important thing is to make it readable for future you and other developers.
+
+Let's add some code to `handleEdit()`.
+
+
+```
+if (this.state.editable) {
+  let name    = this.refs.name.value;
+  let details = this.refs.details.value;
+  console.log('in handleEdit', this.state.editable, name, details);
+}
+
+this.setState({ editable: !this.state.editable })
+```
+
+What are we trying to find out here? When we hit this function and `this.state.editable` is true, meaning if we are currently editing the text, we want to grab the name and the details and log them to the browser console. Then, we simply toggle the state. If it's true, toggle to false and if false, toggle to true. Try it out in the browser and make sure it's behaving as expected.       
+
+Cool. Let's walk up the chain, from `Skill` to `AllSkills` to `Body` and update the specific skill in the `Body` component. Why there and not in the `Skill` component right away? Because we store all skills as state in the `Body` component and data should be updated in one place.
+
+Full disclosure: I first tried to make the Ajax call and update the skill in the `Skill` component. The Ajax was no problem but when I tried to update the skill with the new values it felt wrong. It was not an obvious way to do this and updating an individual skill here and not the entire collection violates the principle of maintaining a Single Source of Truth (we would have two represenations of the same skill on the DOM at the same time).
+
+Fetch the values, compose a skill object and trigger the chain by executing the `handleUpdate()` function reference passed down by the parent.
+
+```
+app/assets/javascripts/components/_skill.js.jsx
+
+onUpdate() {
+  if (this.state.editable) {
+    let name    = this.refs.name.value;
+    let details = this.refs.details.value;
+    let skill = { name: name, details: details }
+
+    this.props.handleUpdate(skill);
+  }
+  this.setState({ editable: !this.state.editable })
+},
+```
+
+This component is just passing it up to its parent.
+
+```
+app/assets/javascripts/components/_all_skills.js.jsx
+
+onUpdate(skill) {
+  this.props.onUpdate(skill);
+},
+
+render() {
+  let skills = this.props.skills.map((skill, index) => {
+    return (
+      <div key={index}>
+        <Skill skill={skill}
+               handleDelete={this.handleDelete.bind(this, skill.id)}
+               handleUpdate={this.onUpdate}/>
+      </div>
+    )
+  });
+```
+
+This is the end of the chain and where we use the `skill` object passed up to update the state, `this.state.skills`.
+
+```
+app/assets/javascripts/components/_body.js.jsx
+
+
+handleUpdate(skill) {
+  console.log(skill, 'in handleUpdate');
+},
+
+render() {
+  return (
+    <div>
+      <NewSkill handleSubmit={this.handleSubmit} />
+      <AllSkills skills={this.state.skills}
+                 handleDelete={this.handleDelete}
+                 onUpdate={this.handleUpdate} />
+    </div>
+  )
+}
+```
+
+
+Since `this.state.skills` is an array of objects it makes most sense to just swap out entire objects instead of opening one up and updating single properties on that object. Let's update the object we pass up from `Skill` to look more like the objects we store as state in `Body`.
+
+
+```
+let id      = this.props.skill.id;
+let name    = this.refs.name.value;
+let details = this.refs.details.value;
+let level   = this.props.skill.level;
+
+let skill = {id: id, name: name, details: details, level: level }
+```  
+
+
+In `handleUpdate()` in the `Body` component we need to swap out the old object with the new one - and make an Ajax call to update the database.
+
+
+```
+handleUpdate(skill) {
+  $.ajax({
+    url: `/api/v1/skills/${skill.id}`,
+    type: 'PUT',
+    data: { skill: skill },
+    success: () => {
+      console.log('you did it');
+      this.updateSkills(skill);
+      // callback to swap objects
+    }
+  });
+},
+```
+
+And now let's write the callback that will swap out the objects.
+
+
+```
+handleUpdate(skill) {
+    // ajax stuffs
+    success: () => {
+      this.updateSkills(skill)
+    }
+  });
+},
+
+updateSkills(skill) {
+  let skills = this.state.skills.filter((s) => { return s.id != skill.id });
+  skills.push(skill);
+
+  this.setState({ skills: skills });
+},
+
+```
+
+First we filter out the skill that matches `skill.id` and then we are pushing the updated skill onto the filtered skills array and then we are updating the state with the correct values.
+
+That wasn't too bad, right?  
+
+### 9. Updating the level of a skill
+
+### 10. Refactor
+
+### 11. Your turn
+
+Possible extensions:
+
+- add styling (use `className` instead of `class` when adding CSS classes)
+- filter skills by level (3 click events on 3 buttons which hides non matching skills)
+- filter skills by text (use `onChange` event handler)
+- tag skills (personal, professional, urgent)
+- create groups of skills

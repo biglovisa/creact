@@ -42,7 +42,7 @@ RSpec.describe Api::V1::SkillsController do
       skill = {name: "Updated name"}
       put :update, id: Skill.first.id, skill: skill, format: :json
 
-      expect(response.status).to eq 204
+      expect(response.status).to eq 200
       expect(Skill.first.name).to eq "Updated name"
     end
   end

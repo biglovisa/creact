@@ -1136,7 +1136,126 @@ That wasn't too bad, right?
 
 ### 9. Updating the level of a skill
 
+
+Last thing we will do before we see if there are any opportunities to refactor our code is updating the level of a skill. Either we could have three buttons corresponding to each of the levels (bad, half-bad and fantastic), or, we could have an up arrow and a down arrow and when the user clicks either it levels up and down respectively.    
+
+It seems like implementing the arrows will take slightly more work, so let's do that.
+
+First, we need our arrow buttons - and we'll be adding our first css!
+
+
+```
+$ touch app/assets/stylesheets/skills.scss
+```
+
+```
+app/assets/stylesheets/application.scss
+
+@import "skills";
+```
+
+```
+app/assets/stylesheets/skills.scss
+
+.skill-level {
+  display: inline-flex;
+}
+
+.skill-level button {
+  background-color: pink;
+  border: 1px solid deeppink;
+}
+```
+
+
+Wrap the `level` with the arrow buttons.
+
+```
+app/assets/components/javascripts/_skill.js.jsx
+
+<div className='skill-level'>
+  <button type="button" className="btn btn-default btn-sm">
+    <span className="glyphicon glyphicon-triangle-bottom"></span>
+  </button>
+
+    <p><strong>Level:</strong> {this.props.skill.level}</p>
+
+  <button type="button" className="btn btn-default btn-sm">
+    <span className="glyphicon glyphicon-triangle-top"></span>
+  </button>
+</div>
+
+```
+
+
+Let's write down a todo-list for this feature.
+
+1. Add click events to the arrows - bind an argument to the function so we know which button was clicked
+2. In the click handler, check if it's possible to decrease/increase the level (is it already the lowest/highest value?)
+3. Depending on #2, send a request to the server to update the status
+
+For #3 we can use the same chain we used for editing the name and the details (`this.props.handleUpdate()`).
+
+Let's add a click listener for both arrow buttons and bind arguments to them.
+
+```
+
+<div className='skill-level'>
+  <button type="button"
+          className="btn btn-default btn-sm"
+          onClick={this.handleLevelChange.bind(this, 'down')}>
+    <span className="glyphicon glyphicon-triangle-bottom"></span>
+  </button>
+
+    <p><strong>Level:</strong> {this.props.skill.level}</p>
+
+  <button type="button"
+          className="btn btn-default btn-sm"
+          onClick={this.handleLevelChange.bind(this, 'up')}>
+    <span className="glyphicon glyphicon-triangle-top"></span>
+  </button>
+</div>
+
+```
+
+
+Now we need some logic in `handleLevelChange()` to decide whether or not to update the level when we click either button.
+
+
+```
+
+handleLevelChange(action) {
+  let levels  = ['bad', 'halfbad', 'fantastic'];
+  let name    = this.props.skill.name;
+  let details = this.props.skill.details;
+  let level   = this.props.skill.level;
+  let index   = levels.indexOf(level);
+
+  if (action === 'up' && index < 2) {
+    let newLevel = levels[index + 1];
+    this.props.handleUpdate({id: this.props.skill.id, name: name, details: details, level: newLevel})
+  } else if (action === 'down' && index > 0) {
+    let newLevel = levels[index - 1];
+    this.props.handleUpdate({id: this.props.skill.id, name: name, details: details, level: newLevel})
+  }
+},
+
+```
+
+That code was working. It wasn't pretty, but it was working.
+
+I'm going to keep it like this and deal with it first thing in next section - time to refactor!
+
+
 ### 10. Refactor
+
+To refactor this, it's a good start to try to state what is happening in the function.
+
+'If the level can be changed, send the updated object to '
+
+
+- extract out API calls to service
+- create idea object
 
 ### 11. Your turn
 
@@ -1147,3 +1266,6 @@ Possible extensions:
 - filter skills by text (use `onChange` event handler)
 - tag skills (personal, professional, urgent)
 - create groups of skills
+
+
+If you are interested in adding sections to this tutorial or find areas for improvement/correction/clarification, please submit a PR!

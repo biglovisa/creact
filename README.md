@@ -1,8 +1,6 @@
 # Creact
 ## Crud + React
 
-<br>
-
 In this tutorial we are going to clone down a repo with a Rails API and build out a React front end using the [react-rails](https://github.com/reactjs/react-rails) gem. We won't cover the Rails API in detail and it is assumed that you are familiar with the general structure of a Rails project and JavaScript syntax.
 
 ### Sections 

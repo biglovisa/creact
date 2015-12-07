@@ -5,11 +5,9 @@ var Skill = React.createClass({
 
   onUpdate() {
     if (this.state.editable) {
-      let id      = this.props.skill.id;
-      let name    = this.refs.name.value;
-      let details = this.refs.details.value;
-      let level   = this.props.skill.level;
-      let skill   = {id: id, name: name, details: details, level: level }
+      let skill   = { id: this.props.skill.id,
+                      name: this.refs.name.value,
+                      details: this.refs.details.value }
 
       this.props.handleUpdate(skill);
     }
@@ -17,28 +15,28 @@ var Skill = React.createClass({
     this.setState({ editable: !this.state.editable })
   },
 
-  handleLevelChange(action) {
-    let levels  = ['bad', 'halfbad', 'fantastic'];
-    let index   = levels.indexOf(this.props.skill.level);
+  onUpdateLevel(action) {
+    if (this.canChangeLevel(action)) {
+      let level = this.getNewLevel(action)
+      let skill = {id: this.props.skill.id, level: level }
 
-    if (this.levelCanBeChanged(action, index)) {
-      this.props.handleUpdate(this.updatedSkill(action, index));
+      this.props.handleUpdate(skill);
     }
   },
 
-  levelCanBeChanged(action, index) {
+  canChangeLevel(action) {
+    let levels  = ['bad', 'halfbad', 'fantastic'];
+    let index   = levels.indexOf(this.props.skill.level);
+
     return action === 'up' && index < 2 ||  action === 'down' && index > 0;
   },
 
-  updatedSkill(action, index) {
-    let id      = this.props.skill.id;
-    let name    = this.props.skill.name;
-    let details = this.props.skill.details;
-    let levels  = ['bad', 'halfbad', 'fantastic'];
-    let change  = action === 'up' ? index + 1 : index - 1;
+  getNewLevel(action) {
+    let levels = ['bad', 'halfbad', 'fantastic'];
+    let level  = levels.indexOf(this.props.skill.level);
+    let change = action === 'up' ? 1 : - 1;
 
-    let newLevel = action ? levels[change] : this.props.skill.level;
-    return {id: id, name: name, details: details, level: newLevel}
+    return action ? levels[level + change] : this.props.skill.level;
   },
 
   render() {
@@ -59,7 +57,7 @@ var Skill = React.createClass({
         <div className='skill-level'>
           <button type="button"
                   className="btn btn-default btn-sm"
-                  onClick={this.handleLevelChange.bind(this, 'down')}>
+                  onClick={this.onUpdateLevel.bind(this, 'down')}>
             <span className="glyphicon glyphicon-triangle-bottom"></span>
           </button>
 
@@ -67,7 +65,7 @@ var Skill = React.createClass({
 
           <button type="button"
                   className="btn btn-default btn-sm"
-                  onClick={this.handleLevelChange.bind(this, 'up')}>
+                  onClick={this.onUpdateLevel.bind(this, 'up')}>
             <span className="glyphicon glyphicon-triangle-top"></span>
           </button>
         </div>

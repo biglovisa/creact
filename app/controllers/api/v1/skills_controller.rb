@@ -12,12 +12,14 @@ class Api::V1::SkillsController < Api::V1::BaseController
   end
 
   def update
-    respond_with Skill.update(params[:id], skill_params)
+    skill = Skill.find(params["id"])
+    skill.update_attributes(skill_params)
+    respond_with skill, json: skill
   end
 
  private
 
   def skill_params
-    params.require(:skill).permit(:name, :details, :level)
+    params.require(:skill).permit(:id, :name, :details, :level)
   end
 end

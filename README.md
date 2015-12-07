@@ -1249,18 +1249,152 @@ I'm going to keep it like this and deal with it first thing in next section - ti
 
 ### 10. Refactor
 
-To refactor this, it's a good start to try to state what is happening in the function.
+To refactor the code above, it's a good start to try to state what is happening in the function.
 
-'If the level can be changed, send the updated object to '
+'If the level can be changed, send the updated object up the chain to be updated'.
+
+That gave me this:
+
+```
+handleLevelChange(action) {
+  if (this.levelCanBeChanged(action)) {
+    let skill = this.updatedSkill()
+    this.props.handleUpdate(skill);
+  }
+},
+
+```
+
+`this.levelCanBeChanged(action)` will return either true or false. We send it the action, either 'up' or 'down', and checks the given limit meets a condition.  
 
 
-- extract out API calls to service
-- create idea object
+```
+
+handleLevelChange(action) {
+  let levels  = ['bad', 'halfbad', 'fantastic'];
+  let level   = levels.indexOf(this.props.skill.level);
+
+  if (this.levelCanBeChanged(action, level)) {
+    let skill = this.updatedSkill()
+    this.props.handleUpdate(skill);
+  }
+},
+
+levlelCanBeChanged(action, limit) {
+  return action === 'up' && limit < 2 ||  action === 'down' && limit > 0;
+},
+
+```
+
+Next up is `updatedSkill()`. We return an object with an updated level that is set by checking the action and moving either up or down in an array.
+
+```
+
+updatedSkill(action, index) {
+  let id       = this.props.skill.id;
+  let name     = this.props.skill.name;
+  let details  = this.props.skill.details;
+
+  let levels   = ['bad', 'halfbad', 'fantastic'];
+  let change   = action === 'up' ? 1 : - 1;
+  let newLevel = action ? levels[index + change] : this.props.skill.level;
+
+  return {id: id, name: name, details: details, level: newLevel}
+},
+
+
+```
+
+We can also refactor out the part where we set the new level to a function.
+
+```
+
+getNewLevel(action, index) {
+  let levels   = ['bad', 'halfbad', 'fantastic'];
+  let change   = action === 'up' ? 1 : - 1;
+
+  return action ? levels[index + change] : this.props.skill.level;
+},
+
+```
+
+This looks better, but there is more to do in this component. `onUpdate()` can be made better. Let's make it a bit more readable.
+
+
+```
+
+onUpdate() {
+  if (this.state.editable) {
+    let skill   = { id: this.props.skill.id,
+                    name: this.refs.name.value,
+                    details: this.refs.details.value,
+                    level: this.props.skill.level }
+
+    this.props.handleUpdate(skill);
+  }
+
+  this.setState({ editable: !this.state.editable })
+},
+
+
+```
+
+The handler function for the level change, `onLevelChange`, can be renamed to `onUpdateLevel` to better match the naming pattern we have for the editing handler function. To make the following code working below I had to update the implemenation of `this.props.handleUpdate`, `handleUpdate()` in the `Body` component. In this function we are only passing up the attributes we need to update (we need the id for the Ajax call). We can therefore also drop the `level` attribute in the skill object in `onUpdate()`.
+
+
+```
+
+onUpdateLevel(action) {
+  if (this.canChangeLevel(action)) {
+    let level = this.getNewLevel(action)
+    let skill = {id: this.props.skill.id, level: level }
+
+    this.props.handleUpdate(skill);
+  }
+},
+
+```
+
+
+Since we are no longer passing up a full skill object we can no longer use it to update the skill in `updateSkills()`. Instead, we need our API to pass the updated object back so we can keep replacing the old skill with the new skill in `updateSkills`. Otherwise we would have to update only the attributes that were present in the skill object which feels... a bit strange. Also, it's way safer to use the updated object from our API and if we can, we wouldn't we?  
+
+
+```
+app/assets/javascripts/components/_body.js.jsx
+
+handleUpdate(skill) {
+  $.ajax({
+    url: `/api/v1/skills/${skill.id}`,
+    type: 'PUT',
+    data: { skill: skill },
+    success: (skill) => {
+      this.updateSkills(skill)
+    }
+  });
+},
+
+```
+
+
+```
+app/skills/controllers/api/v1/skills_controller.rb
+
+def update
+  skill = Skill.find(params["id"])
+  skill.update_attributes(skill_params)
+  respond_with skill, json: skill
+end
+
+```
+
 
 ### 11. Your turn
 
+![](http://reactiongifs.us/wp-content/uploads/2013/02/youre_awesome_carl_sagan.gif)
+
 Possible extensions:
 
+- extract out API calls to service
 - add styling (use `className` instead of `class` when adding CSS classes)
 - filter skills by level (3 click events on 3 buttons which hides non matching skills)
 - filter skills by text (use `onChange` event handler)

@@ -13,8 +13,8 @@ In this tutorial we are going to clone down a repo with a Rails API and build ou
 * [5. Hello, Creact!](https://github.com/applegrain/creact/blob/master/README.md#5-hello-creact)
 * [6. Rendering all skills](https://github.com/applegrain/creact/blob/master/README.md#6-rendering-all-skills)
 * [7. Add a new skill](https://github.com/applegrain/creact/blob/master/README.md#7-add-a-new-skill)
-* [8. Deleting a skill](https://github.com/applegrain/creact/blob/master/README.md#8-deleting-a-skill)
-* [9. Editing an idea](https://github.com/applegrain/creact/blob/master/README.md#9-editing-an-idea)
+* [8. Delete a skill](https://github.com/applegrain/creact/blob/master/README.md#8-delete-a-skill)
+* [9. Edit a skill](https://github.com/applegrain/creact/blob/master/README.md#9-edit-a-skill)
 * [10. Updating the level of a skill](https://github.com/applegrain/creact/blob/master/README.md#10-updating-the-level-of-a-skill)
 * [11. Refactor](https://github.com/applegrain/creact/blob/master/README.md#11-refactor)
 * [12. You are awesome](https://github.com/applegrain/creact/blob/master/README.md#12-you-are-awesome)
@@ -770,7 +770,7 @@ var NewSkill = React.createClass({
 
 <br> 
 
-### 8. Deleting a skill
+### 8. Delete a skill
 ---
 
 Ok, we can render skills and add new ones. Let's implement deleting skills so we can get rid of all the test skills we have added.
@@ -933,7 +933,7 @@ Hop over to the browser and remove some skills... this is fantastic.
 
 <br> 
 
-### 9. Editing an idea
+### 9. Edit a skill
 
 The last and final crud functionality. We are rendering all skills on the page, we are creating new ones, we are deleting them and now we just need to be able to edit them.
 

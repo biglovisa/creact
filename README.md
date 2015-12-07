@@ -5,6 +5,22 @@
 
 In this tutorial we are going to clone down a repo with a Rails API and build out a React front end using the [react-rails](https://github.com/reactjs/react-rails) gem. We won't cover the Rails API in detail and it is assumed that you are familiar with the general structure of a Rails project and JavaScript syntax.
 
+### Sections 
+
+* [0. Up and running](https://github.com/applegrain/creact/blob/master/README.md#0-up-and-running)
+* [1. What's already here?](https://github.com/applegrain/creact/blob/master/README.md#1-whats-already-here)
+* [2. Adding React to your Rails project](https://github.com/applegrain/creact/blob/master/README.md#2-adding-react-to-your-rrails-project)
+* [3. Component Hierarchy](https://github.com/applegrain/creact/blob/master/README.md#3-component-hierarchy)
+* [4. Our first React component](https://github.com/applegrain/creact/blob/master/README.md#4-our-first-react-component)
+* [5. Hello, Creact!](https://github.com/applegrain/creact/blob/master/README.md#5-hello-creact)
+* [6. Rendering all skills](https://github.com/applegrain/creact/blob/master/README.md#6-rendering-all-skills)
+* [7. Add a new skill](https://github.com/applegrain/creact/blob/master/README.md#7-add-a-new-skill)
+* [8. Deleting a skill](https://github.com/applegrain/creact/blob/master/README.md#8-deleting-a-skill)
+* [9. Editing an idea](https://github.com/applegrain/creact/blob/master/README.md#9-editing-an-idea)
+* [10. Updating the level of a skill](https://github.com/applegrain/creact/blob/master/README.md#10-updating-the-level-of-a-skill)
+* [11. Refactor](https://github.com/applegrain/creact/blob/master/README.md#11-refactor)
+* [12. You are awesome](https://github.com/applegrain/creact/blob/master/README.md#12-you-are-awesome)
+
 <br>
 
 ### 0. Up and running
@@ -1571,7 +1587,7 @@ end
 
 <br> 
 
-### 12. Your turn
+### 12. You are awesome
 ---
 ![](http://reactiongifs.us/wp-content/uploads/2013/02/youre_awesome_carl_sagan.gif)
 

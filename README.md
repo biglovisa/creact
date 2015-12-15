@@ -3,7 +3,7 @@
 
 In this tutorial we are going to clone down a repo with a Rails API and build out a React front end using the [react-rails](https://github.com/reactjs/react-rails) gem. We won't cover the Rails API in detail and it is assumed that you are familiar with the general structure of a Rails project and JavaScript syntax.
 
-### Sections 
+### Sections
 
 * [0. Up and running](https://github.com/applegrain/creact/blob/master/README.md#0-up-and-running)
 * [1. What's already here?](https://github.com/applegrain/creact/blob/master/README.md#1-whats-already-here)
@@ -24,10 +24,10 @@ In this tutorial we are going to clone down a repo with a Rails API and build ou
 ### 0. Up and running
 ---
 
-In your terminal, clone the project: 
+In your terminal, clone the project:
 
 ```
-$ git clone git@github.com:applegrain/creact.git
+$ git clone git@github.com:applegrain/creact-starter.git
 $ rake db:{create,migrate,seed}
 ```
 
@@ -58,13 +58,13 @@ only route we are going to use. We also have a `app/controllers/site_controller.
 an index action that passes the instance variable `@skills` to the view. In the view,
 `app/views/site/index.html.erb`, we are iterating over `@skills` to render all the
 skills on the DOM. Later we are going to delete the instance variable in the action
-and have an almost empty view. 
+and have an almost empty view.
 
-In `config/routes.rb` there is also routes for `Api::V1::Skills`. The json API is already built out with the necessary actions. In `app/controllers/api/v1/skills_controller.rb` we are serving json from four endpoints. 
+In `config/routes.rb` there is also routes for `Api::V1::Skills`. The json API is already built out with the necessary actions. In `app/controllers/api/v1/skills_controller.rb` we are serving json from four endpoints.
 
 Further resources on building a json API
 
-- [build a json API (code-along)](https://vimeo.com/134915023). 
+- [build a json API (code-along)](https://vimeo.com/134915023).
 
 <br>
 
@@ -128,9 +128,9 @@ Just like jQuery, we require `react`, `react_ujs` and `components` to the asset 
 ### 3. Component Hierarchy
 ---
 
-The notation for rendering React components is: <ComponentName />. 
+The notation for rendering React components is: <ComponentName />.
 
-Components have parent-child relationships, if component "Cat" renders component "Kitten", "Cat" is the parent of "Kitten". As an example, let's build the component hierarchy for a site with a header, a side bar and tweets: 
+Components have parent-child relationships, if component "Cat" renders component "Kitten", "Cat" is the parent of "Kitten". As an example, let's build the component hierarchy for a site with a header, a side bar and tweets:
 
 The main component, `<Main />`, will render the `<Header />` and `<Body />` component. The `Header` and the `Body` components exist independently of each other but they need to know about similar data, such as the current user or which link in the header was clicked last. We can store that information and keep track of the current state of our application in `Main` and pass it down to `Header` and `Body`. By storing the data in one place we are also only updating the data in one place - we have a so-called "Single Source of Truth", one place where data is stored and updated.
 
@@ -159,7 +159,7 @@ In `<Body />`, we render `<Tweets />` and `<Ads />`. `<Tweets />` and `<Ads />` 
                               |  Body   TweetOptionsBars       
                               |
                               etc
-                              
+
 ```
 
 additional resources on component hierarchy:
@@ -167,18 +167,18 @@ additional resources on component hierarchy:
 - [Video](http://tagtree.tv/thinking-in-react) tutorial that walks through the code used in above article
 
 
-### 4. Our first component 
+### 4. Our first component
 ---
 
 Now we need to connect our Rails views to our (yet non-existent) React code. First, add a file to the components directory. This will be our main file.   
 
-<br> 
+<br>
 
 ```
 $ touch app/assets/javascripts/components/_main.js.jsx
 ```
 
-<br> 
+<br>
 
 The `.js.jsx` extension is similar to `html.erb`. You are telling the browser that you are giving it jsx/erb and asking if it could please render js/html.
 
@@ -194,7 +194,7 @@ Then we establish a connection between the Rails view and the main component. To
 ```
 
 <br>
-And let's add our first React component - head to the browser and make sure it works. 
+And let's add our first React component - head to the browser and make sure it works.
 <br>
 
 **app/assets/javascripts/components/_main.js.jsx**
@@ -275,7 +275,7 @@ Let's build out the component hierarchy. We are going to implement basic CRUD fu
 
 ```
 
-<br> 
+<br>
 
 Let's remove our current `h1` and add `<Header />` in it's place.
 
@@ -294,7 +294,7 @@ var Main = React.createClass({
 });
 ```
 
-<br> 
+<br>
 
 We are rendering the `Header` component (still non-existent) in the `Main` component, which makes `Header` the child of `Main`.
 
@@ -304,9 +304,9 @@ We are rendering the `Header` component (still non-existent) in the `Main` compo
 $ touch app/assets/javascripts/components/_header.js.jsx
 ```
 
-<br> 
+<br>
 
-Our code for the `Header` component will look very similar to what we have in `Main`. For now, put an `h1` in the return statement with whatever text you want. Hop over to your browser to make sure the `h1` renders as it should. If not, take a look at the code we first had in `Main` and compare the syntax. Let's leave the `Header` for now and move on to building out the body. 
+Our code for the `Header` component will look very similar to what we have in `Main`. For now, put an `h1` in the return statement with whatever text you want. Hop over to your browser to make sure the `h1` renders as it should. If not, take a look at the code we first had in `Main` and compare the syntax. Let's leave the `Header` for now and move on to building out the body.
 
 <br>
 
@@ -323,7 +323,7 @@ $ touch app/assets/javascripts/components/_new_skill.js.jsx
 
 Go ahead and add the code from `Header` in the `Body`, `AllSkills` and `NewSkill` components. `Body` should render `AllSkills`. Put an arbitrary `h1` in `AllSkills` so we can get some feedback on the page. At this point, two `h1`'s should be rendered on the page. If they don't, open up the dev tools (option + cmd + i) and see if you have any errors in the console. If they aren't useful, look over the syntax carefully and make sure it looks like what we have in `Main`.
 
-Our next step is to fetch all skills from the server. We will use Ajax to ping the index action of our Rails API to get all the skills from the database. It's important that our Ajax call is only executed once. It's expensive to make Ajax calls and depending on the scale of your applications, it can cause performance issues. If we were using jQuery, we would implement this in a `$(document).ready()` function. 
+Our next step is to fetch all skills from the server. We will use Ajax to ping the index action of our Rails API to get all the skills from the database. It's important that our Ajax call is only executed once. It's expensive to make Ajax calls and depending on the scale of your applications, it can cause performance issues. If we were using jQuery, we would implement this in a `$(document).ready()` function.
 
 React components have some built in methods available that execute during different points during a component's lifecycle. Some examples include functions that execute before/after a component mounts on the DOM and before/after it dismounts. In this case, we want a method that renders once when the component is mounted on the DOM. We are going to use `componentDidMount()` which is called right after the component is mounted. For more details about methods that are available to components and when to use them, check out the [docs](https://facebook.github.io/react/docs/component-specs.html).
 
@@ -349,7 +349,7 @@ var AllSkills = React.createClass({
 
 ```
 
-<br> 
+<br>
 
 Why is there a comma at the end of our function? Take a closer look at the syntax. When we write `var AllSkills = React.createClass( /* Code here */ )` we give it an object containing all the code for the component. Since elements in objects are comma separated, we put a comma at the end of our functions.
 
@@ -390,8 +390,8 @@ Now, when we get the response back from the server, we want to update `skills` a
 
 To be sure that we actually updated the state, let's log the state (`console.log(this.state)`) in the `render()` method. Make sure to put it outside of the return statement! You should see something like the following in your browser console.
 
-`this.state.skills` is how we would access the skills array. 
- 
+`this.state.skills` is how we would access the skills array.
+
 <br>
 
 ```
@@ -434,7 +434,7 @@ The return value from the `this.state.skills.map...` will be an array of HTML di
 
 You should see an error like this in the browser console:
 
-<br> 
+<br>
 
 ```
 Each child in an array or iterator should have a unique "key" prop. Check the render method of `AllSkills`. See https://fb.me/react-warning-keys for more information.
@@ -472,7 +472,7 @@ The second argument in a map iteration is the index, so let's use it and add uni
 ### 7. Add a new skill
 ---
 
-Remember the `NewSkill` component? 
+Remember the `NewSkill` component?
 
 **app/assets/javascripts/components/_new_skill.js.jsx**
 ```
@@ -490,9 +490,9 @@ var NewSkill = React.createClass({
 
 <br>
 
-What do we need to create a new skill? We need a form where the user can enter a name and details and a submit button which will take the input from the form and send it over to the API and add the skill to the database. Let's start with the form. We are just going to use regular HTML to get the form and the submit button on the page. We add the refs to input fields to be able to fetch their value using `this.refs.name.value && this.refs.details.value`. More info on [refs](https://facebook.github.io/react/docs/more-about-refs.html). 
+What do we need to create a new skill? We need a form where the user can enter a name and details and a submit button which will take the input from the form and send it over to the API and add the skill to the database. Let's start with the form. We are just going to use regular HTML to get the form and the submit button on the page. We add the refs to input fields to be able to fetch their value using `this.refs.name.value && this.refs.details.value`. More info on [refs](https://facebook.github.io/react/docs/more-about-refs.html).
 
-<br> 
+<br>
 
 **app/assets/javascripts/components/_new_skill.js.jsx**
 ```
@@ -544,7 +544,7 @@ let details = this.refs.details.value;
 console.log(name, details);
 ```
 
-<br> 
+<br>
 
 Let's send the form values over to the server so we can create a new skill.
 
@@ -642,7 +642,7 @@ Then, we want to send a reference to this function down to the `NewSkill` compon
 
 In the `NewSkill` component, we can call this function by adding parenthesis, just like a regular JavaScript function. In the `success` function, execute the `handleSubmit` function and give it the name and details as an object as an argument.
 
-<br> 
+<br>
 
 **app/assets/javascripts/components/_new_skill.js.jsx**
 ```
@@ -664,7 +664,7 @@ Almost there!
 
 Now we need to add it to `this.state.skills`. We can use `concat()` to add the skill to the old state and then set the state with the new state.
 
-<br> 
+<br>
 
 **app/assets/javascripts/components/_body.js.jsx**
 ```
@@ -674,7 +674,7 @@ handleSubmit(skill) {
 },
 ```
 
-<br> 
+<br>
 
 That's it! We have successfully added a new skill that is rendered on the DOM immediately.
 
@@ -737,7 +737,7 @@ var AllSkills = React.createClass({
 ```
 
 <br>
- 
+
 **app/assets/javascripts/components/_new_skill.js.jsx**
 ```
 var NewSkill = React.createClass({
@@ -768,7 +768,7 @@ var NewSkill = React.createClass({
 
 ```
 
-<br> 
+<br>
 
 ### 8. Delete a skill
 ---
@@ -785,7 +785,7 @@ What do we need to do?
 
 Let's start with adding a delete button to each skill with an on click listener that takes us to the function `handleDelete` in the same component.
 
-<br> 
+<br>
 
 **app/assets/javascripts/components/_all_skills.js.jsx**
 ```
@@ -853,7 +853,7 @@ var AllSkills = React.createClass({
 
 ```
 
-<br> 
+<br>
 
 We have one pretty obvious problem to solve before we continue. How does the program know *which* skill it is that we want to delete? In the `Body` component we need to use some data that identifies the skill we want to remove so we can filter it out from the skills array. How about an id?
 
@@ -931,7 +931,7 @@ removeIdeaFromDOM(id) {
 
 Hop over to the browser and remove some skills... this is fantastic.
 
-<br> 
+<br>
 
 ### 9. Edit a skill
 
@@ -964,7 +964,7 @@ handleEdit() {
 <button onClick={this.handleEdit}>Edit</button>
 ```
 
-<br> 
+<br>
 
 Do you get feedback in your browser console when we click `Edit`? Cool.
 
@@ -1024,7 +1024,7 @@ var Skill = React.createClass({
 });
 ```
 
-<br> 
+<br>
 
 Just to double check that we have wired things up correctly, go to the browser and make sure you can still delete skills and that something logs to the console when you click `Edit`.
 
@@ -1036,7 +1036,7 @@ Now, when we click `Edit`, we want to set a state that will tell us that we are 
 <button onClick={this.handleEdit}>Edit</button>
 ```
 
-<br> 
+<br>
 
 and add that function in the `Skill` component.
 
@@ -1049,11 +1049,11 @@ handleEdit() {
 
 ```
 
-<br> 
+<br>
 
 Now what? Add an initial state to the `Skill` component that defaults to `false`. In `handleEdit()` we need to set this state to true.
 
-<br> 
+<br>
 
 **app/assets/javascripts/components/_skill.js.jsx**
 ```
@@ -1106,7 +1106,7 @@ render() {
 
 <br>
 
-In the render function we are using a ternary to decide how we should render name/details. It doesn't matter what data we give our component, based on its state, props and the constraints we set up, we always know what the component will render. We want dumb child components that just render conditionally based on the props they receive and their current state. Head over to the browser and check it out! 
+In the render function we are using a ternary to decide how we should render name/details. It doesn't matter what data we give our component, based on its state, props and the constraints we set up, we always know what the component will render. We want dumb child components that just render conditionally based on the props they receive and their current state. Head over to the browser and check it out!
 
 Let's transform the `Edit` button to a `Submit` button when we click `Edit`. We can use the `editable` state and a ternary directly in the JSX to change that.
 
@@ -1123,7 +1123,7 @@ Awesome.
 
 We can make a small change to how we update the state in `handleEdit()` to make it toggle between true/false.
 
-<br> 
+<br>
 
 ```
 handleEdit() {
@@ -1168,7 +1168,7 @@ if (this.state.editable) {
 this.setState({ editable: !this.state.editable })
 ```
 
-<br> 
+<br>
 
 What are we trying to find out here? When we hit this function and `this.state.editable` is true, meaning if we are currently editing the text, we want to grab the name and the details and log them to the browser console. Then, we simply toggle the state to alternate between true/false. Try it out in the browser and make sure it's behaving as expected.       
 
@@ -1196,7 +1196,7 @@ onUpdate() {
 
 This component is just passing it up to its parent.
 
-<br> 
+<br>
 
 
 **app/assets/javascripts/components/_all_skills.js.jsx**
@@ -1221,7 +1221,7 @@ render() {
 
 This is the end of the chain and where we use the `skill` object passed up to update the state, `this.state.skills`.
 
-<br> 
+<br>
 
 **app/assets/javascripts/components/_body.js.jsx**
 ```
@@ -1241,11 +1241,11 @@ render() {
 }
 ```
 
-<br> 
+<br>
 
 Since `this.state.skills` is an array of objects it makes most sense to just swap out entire objects instead of opening one up and updating single properties on that object. Let's update the object we pass up from `Skill` to look more like the objects we store as state in `Body`.
 
-<br> 
+<br>
 
 ```
 let id      = this.props.skill.id;
@@ -1260,7 +1260,7 @@ let skill = {id: id, name: name, details: details, level: level }
 
 In `handleUpdate()` in the `Body` component we need to swap out the old object with the new one - and make an Ajax call to update the database.
 
-<br> 
+<br>
 
 ```
 handleUpdate(skill) {
@@ -1277,11 +1277,11 @@ handleUpdate(skill) {
 },
 ```
 
-<br> 
+<br>
 
 And now let's write the callback that will swap out the objects.
 
-<br> 
+<br>
 
 ```
 handleUpdate(skill) {
@@ -1300,11 +1300,11 @@ updateSkills(skill) {
 },
 ```
 
-<br> 
+<br>
 
 First we filter out the skill that matches `skill.id`, then we are pushing the updated skill onto the filtered skills array and then we are updating the state with the correct values.
 
-<br> 
+<br>
 
 ### 10. Updating the level of a skill
 ---
@@ -1315,19 +1315,19 @@ It seems like implementing the arrows will take slightly more work, so let's do 
 
 First, we need our arrow buttons - and we'll be adding our first css!
 
-<br> 
+<br>
 ```
 $ touch app/assets/stylesheets/skills.scss
 ```
 
-<br> 
+<br>
 
 **app/assets/stylesheets/application.scss**
 ```
 @import "skills";
 ```
 
-<br> 
+<br>
 
 **app/assets/stylesheets/skills.scss**
 ```
@@ -1341,11 +1341,11 @@ $ touch app/assets/stylesheets/skills.scss
 }
 ```
 
-<br> 
+<br>
 
 Wrap the `level` with the arrow buttons.
 
-<br> 
+<br>
 
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
@@ -1362,7 +1362,7 @@ Wrap the `level` with the arrow buttons.
 </div>
 ```
 
-<br> 
+<br>
 
 Let's write down a todo-list for this feature.
 
@@ -1374,7 +1374,7 @@ For #3 we can use the same chain we used for editing the name and the details (`
 
 Let's add a click listener for both arrow buttons and bind arguments to them.
 
-<br> 
+<br>
 
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
@@ -1452,7 +1452,7 @@ handleLevelChange(action) {
 
 ```
 
-<br> 
+<br>
 
 `this.levelCanBeChanged(action)` will return either true or false. We send it the action, either 'up' or 'down', and checks the given limit meets a condition.  
 
@@ -1473,11 +1473,11 @@ levlelCanBeChanged(action, limit) {
 },
 ```
 
-<br> 
+<br>
 
 Next up is `updatedSkill()`. We return an object with an updated level that is set by checking the action and moving either up or down in an array.
 
-<br> 
+<br>
 
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
@@ -1510,11 +1510,11 @@ getNewLevel(action, index) {
 },
 ```
 
-<br> 
+<br>
 
 This looks better, but there is more to do in this component. `onUpdate()` can be made better. Let's make it a bit more readable.
 
-<br> 
+<br>
 
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
@@ -1532,11 +1532,11 @@ onUpdate() {
 },
 ```
 
-<br> 
+<br>
 
 The handler function for the level change, `onLevelChange`, can be renamed to `onUpdateLevel` to better match the naming pattern we have for the editing handler function. To make the following code working below I had to update the implemenation of `this.props.handleUpdate`, `handleUpdate()` in the `Body` component. In this function we are now only passing up the attributes we need to update (we need the id for the Ajax call). We can therefore also drop the `level` attribute in the skill object in `onUpdate()`.
 
-<br> 
+<br>
 
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
@@ -1550,11 +1550,11 @@ onUpdateLevel(action) {
 },
 ```
 
-<br> 
+<br>
 
 Since we are no longer passing up a full skill object we can no longer use it to update the skill in `updateSkills()`. Instead, we need our API to pass the updated object back so we can keep replacing the old skill with the new skill in `updateSkills`. Otherwise we would have to update only the attributes that were present in the skill object which feels... a bit strange. Also, it's way safer to use the updated object from our API and if we can, we wouldn't we?  
 
-<br> 
+<br>
 
 **app/assets/javascripts/components/_body.js.jsx**
 ```
@@ -1583,7 +1583,7 @@ def update
 end
 ```
 
-<br> 
+<br>
 
 ### 12. You are awesome
 ---
@@ -1599,4 +1599,4 @@ Possible extensions:
 - create groups of skills
 
 
-If you are interested in adding sections to this tutorial or find areas for improvement/correction/clarification, please submit a pull request. 
+If you are interested in adding sections to this tutorial or find areas for improvement/correction/clarification, please submit a pull request.

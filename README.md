@@ -31,7 +31,16 @@ $ git clone git@github.com:applegrain/creact-starter.git
 $ rake db:{create,migrate,seed}
 ```
 
+If you are having troubles with the above commands and get something like `NoMethodError for details=` run the following: 
+
+```
+$ rake db:{drop,setup}
+```
+
+`rake db:setup` will run `schema:load` to do the migrations instead of manually migrating them. If we just run regular migrations, it's as if the migrations hasn't completed before we start using them in our seed file. If anyone knows why, PR's accepted!
+
 run tests with:
+
 
 ```
 $ bundle exec rspec

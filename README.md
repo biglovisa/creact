@@ -553,6 +553,8 @@ let details = this.refs.details.value;
 console.log(name, details);
 ```
 
+if `this.refs.name.value` and/or `this.refs.details.value` are returning `undefined`, put a debugger in the function and try to access the input values like this instead: `this.refs.name.getDOMNode().value` and `this.refs.details.getDOMNode().value`. 
+
 <br>
 
 Let's send the form values over to the server so we can create a new skill.

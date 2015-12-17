@@ -418,23 +418,23 @@ We might eventually want to create a `Skill` component for each object in the sk
 ```
 // componentDidMount() and getInitialState()
 
-render(
-  var skills = this.state.skills.map((skill) => {
-    return (
+  render() {
+    var skills = this.state.skills.map((skill, index) => {
+      return (
+        <div key={index}>
+          <h3>{skill.name}</h3>
+          <p><strong>Level:</strong> {skill.level}</p>
+          <p>{skill.details}</p>
+        </div>
+      )
+    });
+
+    return(
       <div>
-        <h3>{skill.name}</h3>
-        <p><strong>Level:</strong> {skill.level}</p>
-        <p>{skill.details}</p>
+        {skills}
       </div>
     )
-  });
-
-  return (
-    <div>
-      {skills}
-    </div>
-  )
-)
+  }
 ```
 
 <br>

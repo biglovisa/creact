@@ -419,9 +419,9 @@ We might eventually want to create a `Skill` component for each object in the sk
 // componentDidMount() and getInitialState()
 
   render() {
-    var skills = this.state.skills.map((skill, index) => {
+    var skills = this.state.skills.map((skill) => {
       return (
-        <div key={index}>
+        <div>
           <h3>{skill.name}</h3>
           <p><strong>Level:</strong> {skill.level}</p>
           <p>{skill.details}</p>

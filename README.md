@@ -189,11 +189,13 @@ $ touch app/assets/javascripts/components/_main.js.jsx
 
 <br>
 
-The `.js.jsx` extension is similar to `html.erb`. You are telling the browser that you are giving it jsx/erb and asking if it could please render js/html.
+The `.js.jsx` extension is similar to `html.erb`. In Rails views, we write erb that gets compiled down to HTML. With `js.jsx` files, we write JSX that gets compiled to JavaScript.
 
 Then we establish a connection between the Rails view and the main component. To render `_main.js.jsx` in our root we need to add the view helper we get from the react-rails gem. It puts a div on the page with the requested component class. Go ahead and delete the old code in the view. Since we use React as our view layer, our Rails views are next to empty (as they should be).
 
 <br>
+
+Since the Rails asset pipeline will take all of our JavaScript and mash it together, the names of the JavaScript files don't really matter. Below, React will look for a component that's named `Main`. 
 
 **app/views/site/index.html.erb**
 ```

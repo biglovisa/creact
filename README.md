@@ -81,7 +81,7 @@ Further resources on building a json API
 ---
 
 (React.js)[https://facebook.github.io/react/] is a "JavaScript library for building user interfaces". It's a tiny framework used to build your view layer. React can be used in combination with almost any back
-end, and can be combinded with other front end frameworks as well. React, can be sprinkled in
+end, and can be combined with other front end frameworks as well. React, can be sprinkled in
 anywhere in your Rails application. React could be used for a search bar, be part of the nav
 bar or be used for the whole page.
 
@@ -367,7 +367,7 @@ Why is there a comma at the end of our function? Take a closer look at the synta
 Did you see the output from the `console.log()` in the browser console? Cool! Let's see if we can fetch all skills.
 
 ```
-$.getJSON('/api/v1/skills.json', (response) => { console.log(response) });
+$.getJSON('/api/v1/skills.json', (response) => { console.table(response) });
 ```
 
 Make sure to look in the browser console to make sure everything looks good.

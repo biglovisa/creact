@@ -462,9 +462,9 @@ Let's help React out and add a key prop.
 <br>
 
 ```
-var skills = this.state.skills.map((skill, index) => {
+var skills = this.state.skills.map((skill) => {
   return (
-    <div key={index}>
+    <div key={skill.id}>
       <h3>{skill.name}</h3>
       <p><strong>Level:</strong> {skill.level}</p>
       <p>{skill.details}</p>
@@ -476,7 +476,7 @@ var skills = this.state.skills.map((skill, index) => {
 
 <br>
 
-The second argument in a map iteration is the index, so let's use it and add unique key props for all the skills we render. Refresh, and voila - no more errors.
+We can use each skill's id as a unique key. Refresh, and voila - no more errors.
 
 <br>
 
@@ -609,9 +609,9 @@ We have one more change to do before the skills will render on the DOM. In `AllS
 
 **app/assets/javascripts/components/_all_skills.js.jsx**
 ```
-var skills = this.props.skills.map((skill, index) => {
+var skills = this.props.skills.map((skill) => {
   return (
-    <div key={index}>
+    <div key={skill.id}>
       <h3>{skill.name}</h3>
       <p><strong>Level:</strong> {skill.level}</p>
       <p>{skill.details}</p>
@@ -729,9 +729,9 @@ var Body = React.createClass({
 ```
 var AllSkills = React.createClass({
   render() {
-    let skills = this.props.skills.map((skill, index) => {
+    let skills = this.props.skills.map((skill) => {
       return (
-        <div key={index}>
+        <div key={skill.id}>
           <h3>{skill.name}</h3>
           <p><strong>Level:</strong> {skill.level}</p>
           <p>{skill.details}</p>
@@ -808,9 +808,9 @@ var AllSkills = React.createClass({
   },
 
   render() {
-    let skills = this.props.skills.map((skill, index) => {
+    let skills = this.props.skills.map((skill) => {
       return (
-        <div key={index}>
+        <div key={skill.id}>
           <h3>{skill.name}</h3>
           <p><strong>Level:</strong> {skill.level}</p>
           <p>{skill.details}</p>
@@ -999,9 +999,9 @@ We need to update `AllSkills` and create `Skill` components when we iterate over
 
 **app/assets/javascripts/components/_all_skills.js.jsx**
 ```
-let skills = this.props.skills.map((skill, index) => {
+let skills = this.props.skills.map((skill) => {
   return (
-    <div key={index}>
+    <div key={skill.id}>
       <Skill skill={skill}
              handleDelete={this.handleDelete.bind(this, skill.id)}
              handleEdit={this.handleEdit}/>
@@ -1219,9 +1219,9 @@ onUpdate(skill) {
 },
 
 render() {
-  let skills = this.props.skills.map((skill, index) => {
+  let skills = this.props.skills.map((skill) => {
     return (
-      <div key={index}>
+      <div key={skill.id}>
         <Skill skill={skill}
                handleDelete={this.handleDelete.bind(this, skill.id)}
                handleUpdate={this.onUpdate}/>

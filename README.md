@@ -1153,7 +1153,7 @@ var name = this.state.editable ? <input type='text'
                                : <h3>{this.props.skill.name}</h3>
 
 let details = this.state.editable ? <textarea type='text'
-                                              ref='notes'
+                                              ref='details'
                                               defaultValue={this.props.skill.details}>
                                     </textarea>
                                   : <p>{this.props.skill.details}</p>

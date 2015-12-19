@@ -31,7 +31,7 @@ $ git clone git@github.com:applegrain/creact-starter.git
 $ rake db:{create,migrate,seed}
 ```
 
-If you are having troubles with the above commands and get something like `NoMethodError for details=` run the following: 
+If you are having troubles with the above commands and get something like `NoMethodError for details=` run the following:
 
 ```
 $ rake db:{drop,setup}
@@ -80,12 +80,12 @@ Further resources on building a json API
 ### 2. Adding React to your Rails project
 ---
 
-(React.js)[https://facebook.github.io/react/] is a "JavaScript library for building user interfaces". It's a tiny framework used to build your view layer. React can be used in combination with almost any back
+[React.js](https://facebook.github.io/react/) is a "JavaScript library for building user interfaces". It's a tiny framework used to build your view layer. React can be used in combination with almost any back
 end, and can be combined with other front end frameworks as well. React, can be sprinkled in
 anywhere in your Rails application. React could be used for a search bar, be part of the nav
 bar or be used for the whole page.
 
-React is a JavaScript library but fortunately we can use the (react-rails)[https://github.com/reactjs/react-rails] gem that enables us to use React and JSX in our Rails application. You'll get more familiar with JSX a bit further down but it's basically the equivalent to erb. It's how we mix JavaScript with HTML - the same way we can mix Ruby with HTML when we use erb.
+React is a JavaScript library but fortunately we can use the [react-rails](https://github.com/reactjs/react-rails) gem that enables us to use React and JSX in our Rails application. You'll get more familiar with JSX a bit further down but it's basically the equivalent to erb. It's how we mix JavaScript with HTML - the same way we can mix Ruby with HTML when we use erb.
 
 <br>
 
@@ -195,7 +195,7 @@ Then we establish a connection between the Rails view and the main component. To
 
 <br>
 
-Since the Rails asset pipeline will take all of our JavaScript and mash it together, the names of the JavaScript files don't really matter. Below, React will look for a component that's named `Main`. 
+Since the Rails asset pipeline will take all of our JavaScript and mash it together, the names of the JavaScript files don't really matter. Below, React will look for a component that's named `Main`.
 
 **app/views/site/index.html.erb**
 ```
@@ -555,7 +555,7 @@ let details = this.refs.details.value;
 console.log(name, details);
 ```
 
-if `this.refs.name.value` and/or `this.refs.details.value` are returning `undefined`, put a debugger in the function and try to access the input values like this instead: `this.refs.name.getDOMNode().value` and `this.refs.details.getDOMNode().value`. 
+if `this.refs.name.value` and/or `this.refs.details.value` are returning `undefined`, put a debugger in the function and try to access the input values like this instead: `this.refs.name.getDOMNode().value` and `this.refs.details.getDOMNode().value`.
 
 <br>
 

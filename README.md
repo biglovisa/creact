@@ -221,6 +221,8 @@ var Main = React.createClass({
   }
 });
 
+If you're receving an error about Rails not recognizing your react_components, be sure to restart your server.
+
 ```
 
 <br>

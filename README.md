@@ -150,22 +150,22 @@ In `<Body />`, we render `<Tweets />` and `<Ads />`. `<Tweets />` and `<Ads />` 
 ```
 
           Main
-        /      \  
+        /      \
        /        \
     Header       Body
                 /     \
              Ads     Tweets
                           \______
                               |   Tweet
-                              |       _\_  
+                              |       _\_
                               |      /    \
-                              |  Body   TweetOptionsBars       
+                              |  Body   TweetOptionsBars
                               |
                               |___
                               |   Tweet
-                              |       _\_  
+                              |       _\_
                               |      /    \
-                              |  Body   TweetOptionsBars       
+                              |  Body   TweetOptionsBars
                               |
                               etc
 
@@ -179,7 +179,7 @@ additional resources on component hierarchy:
 ### 4. Our first component
 ---
 
-Now we need to connect our Rails views to our (yet non-existent) React code. First, add a file to the components directory. This will be our main file.   
+Now we need to connect our Rails views to our (yet non-existent) React code. First, add a file to the components directory. This will be our main file.
 
 <br>
 
@@ -272,7 +272,7 @@ return (
 
 <br>
 
-Let's build out the component hierarchy. We are going to implement basic CRUD functionality; **create**, **read***, **update**, **delete**. Our `Main` component could render a `Header` and a `Body`. In the `Body`, we need to be able to view all skills, create a new skill, edit a skill and delete a skill. So, `Body` could render `<NewSkill />` and `<AllSkills />`. `NewSkill` is a form to create new skills and `AllSkills` renders a collection of individual `Skill` components - each `Skill` component has it's own delete and edit button.  
+Let's build out the component hierarchy. We are going to implement basic CRUD functionality; **create**, **read***, **update**, **delete**. Our `Main` component could render a `Header` and a `Body`. In the `Body`, we need to be able to view all skills, create a new skill, edit a skill and delete a skill. So, `Body` could render `<NewSkill />` and `<AllSkills />`. `NewSkill` is a form to create new skills and `AllSkills` renders a collection of individual `Skill` components - each `Skill` component has it's own delete and edit button.
 
 <br>
 
@@ -283,7 +283,7 @@ Let's build out the component hierarchy. We are going to implement basic CRUD fu
   Header        Body
               /     \
         NewSkill    AllSkills
-                        \  
+                        \
                         Skills * n
 
 ```
@@ -326,7 +326,7 @@ Our code for the `Header` component will look very similar to what we have in `M
 ### 6. Rendering all skills
 ---
 
-Now let's render all skills on the page. First, we need to add a `Body` component in which our `NewSkill` and `AllSkills` components will be rendered.         
+Now let's render all skills on the page. First, we need to add a `Body` component in which our `NewSkill` and `AllSkills` components will be rendered.
 
 ```
 $ touch app/assets/javascripts/components/_body.js.jsx
@@ -382,7 +382,7 @@ Right now we are just logging the result to make sure we get the objects we want
 ```
 var AllSkills = React.createClass({
   getInitialState() {
-    return { skills: [] }  
+    return { skills: [] }
   },
 
 // rest of the component
@@ -474,7 +474,7 @@ var skills = this.state.skills.map((skill) => {
   )
 });
 
-```  
+```
 
 <br>
 
@@ -849,7 +849,7 @@ handleDelete() {
 // render <NewSkill />
 
 <AllSkills skills={this.state.skills} handleDelete={this.handleDelete} />
-```  
+```
 
 <br>
 
@@ -960,7 +960,7 @@ This is what we need to accomplish:
 3. On click `Edit`, transform the text fields to input fields (alternatively render a new form below)
 4. When the user clicks the `Submit` button, grab the values from the input fields
 5. Send the updated values over to our Rails API to update the skill
-6. Update the skill and replace the old values with the new values   
+6. Update the skill and replace the old values with the new values
 
 Let's start with `1` and `2`. Add an `Edit` button and add a click listener for it which takes us to a `handleEdit` function in the same component.
 
@@ -991,7 +991,7 @@ So if each skill needs to know whether or not its `Edit` button has been clicked
 
 ```
 $ touch app/assets/javascripts/components/_skill.js.jsx
-```  
+```
 
 <br>
 
@@ -1185,7 +1185,7 @@ this.setState({ editable: !this.state.editable })
 
 <br>
 
-What are we trying to find out here? When we hit this function and `this.state.editable` is true, meaning if we are currently editing the text, we want to grab the name and the details and log them to the browser console. Then, we simply toggle the state to alternate between true/false. Try it out in the browser and make sure it's behaving as expected.       
+What are we trying to find out here? When we hit this function and `this.state.editable` is true, meaning if we are currently editing the text, we want to grab the name and the details and log them to the browser console. Then, we simply toggle the state to alternate between true/false. Try it out in the browser and make sure it's behaving as expected.
 
 Cool. Let's walk up the chain, from `Skill` to `AllSkills` to `Body` and update the specific skill in the `Body` component. Why update the skill in the `Body` component and not  right away in the `Skill` component? Because we store all skills as state in the `Body` component and data should be updated in one place.
 
@@ -1269,7 +1269,7 @@ let details = this.refs.details.value;
 let level   = this.props.skill.level;
 
 let skill = {id: id, name: name, details: details, level: level }
-```  
+```
 
 <br>
 
@@ -1324,7 +1324,7 @@ First we filter out the skill that matches `skill.id`, then we are pushing the u
 ### 10. Updating the level of a skill
 ---
 
-Last thing we will do before we see if there are any opportunities to refactor our code is updating the level of a skill. Either we could have three buttons corresponding to each of the levels (bad, half-bad and fantastic), or, we could have an up arrow and a down arrow and when the user clicks either it levels up and down respectively.    
+Last thing we will do before we see if there are any opportunities to refactor our code is updating the level of a skill. Either we could have three buttons corresponding to each of the levels (bad, half-bad and fantastic), or, we could have an up arrow and a down arrow and when the user clicks either it levels up and down respectively.
 
 It seems like implementing the arrows will take slightly more work, so let's do that.
 
@@ -1469,7 +1469,7 @@ handleLevelChange(action) {
 
 <br>
 
-`this.levelCanBeChanged(action)` will return either true or false. We send it the action, either 'up' or 'down', and checks the given limit meets a condition.  
+`this.levelCanBeChanged(action)` will return either true or false. We send it the action, either 'up' or 'down', and checks the given limit meets a condition.
 
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
@@ -1567,7 +1567,7 @@ onUpdateLevel(action) {
 
 <br>
 
-Since we are no longer passing up a full skill object we can no longer use it to update the skill in `updateSkills()`. Instead, we need our API to pass the updated object back so we can keep replacing the old skill with the new skill in `updateSkills`. Otherwise we would have to update only the attributes that were present in the skill object which feels... a bit strange. Also, it's way safer to use the updated object from our API and if we can, we wouldn't we?  
+Since we are no longer passing up a full skill object we can no longer use it to update the skill in `updateSkills()`. Instead, we need our API to pass the updated object back so we can keep replacing the old skill with the new skill in `updateSkills`. Otherwise we would have to update only the attributes that were present in the skill object which feels... a bit strange. Also, it's way safer to use the updated object from our API and if we can, we wouldn't we?
 
 <br>
 

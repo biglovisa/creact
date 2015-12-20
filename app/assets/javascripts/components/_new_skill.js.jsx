@@ -1,5 +1,7 @@
 var NewSkill = React.createClass({
   handleClick() {
+    debugger;
+
     let name    = this.refs.name.value;
     let details = this.refs.details.value;
 

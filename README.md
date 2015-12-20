@@ -1087,7 +1087,7 @@ var Skill = React.createClass({
 
 <br>
 
-And now what? We need to render the component conditionally based on our state. If `this.state.editable` is false, we want to render `h3` tag with the name and the `p` tag with the details as normal. If not, we want to render and input field for the name and a textarea for the details. Sounds like we need ternary operator.
+And now what? We need to render the component conditionally based on our state. If `this.state.editable` is false, we want to render `h3` tag with the name and the `p` tag with the details as normal. If not, we want to render an input field for the name and a textarea for the details. Sounds like we need ternary operator.
 
 <br>
 

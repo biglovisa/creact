@@ -1001,15 +1001,19 @@ We need to update `AllSkills` and create `Skill` components when we iterate over
 
 **app/assets/javascripts/components/_all_skills.js.jsx**
 ```
-let skills = this.props.skills.map((skill) => {
-  return (
-    <div key={skill.id}>
-      <Skill skill={skill}
-             handleDelete={this.handleDelete.bind(this, skill.id)}
-             handleEdit={this.handleEdit}/>
-    </div>
-  )
-});
+render () {
+  let skills = this.props.skills.map((skill) => {
+    return (
+      <div key={skill.id}>
+        <Skill skill={skill}
+               handleDelete={this.handleDelete.bind(this, skill.id)}
+               handleEdit={this.handleEdit}/>
+      </div>
+    )
+  });
+
+  // return () the skills array
+}
 ```
 
 <br>

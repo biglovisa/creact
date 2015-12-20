@@ -594,7 +594,7 @@ Let's move some code around. Move `getInitialState()` and `componentDidMount()` 
 
 How does `AllSkills` get access to all the skills?
 
-Parents can send variables down its children as `props`. `Props` are immutable in the child. Let's send the skills array from the `Body` component to the `AllSkills` component as props.
+Parents can send variables down to their children as `props`. `Props` are immutable in the child. Let's send the skills array from the `Body` component to the `AllSkills` component as props.
 
 <br>
 

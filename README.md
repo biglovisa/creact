@@ -1483,7 +1483,7 @@ handleLevelChange(action) {
   }
 },
 
-levlelCanBeChanged(action, limit) {
+levelCanBeChanged(action, limit) {
   return action === 'up' && limit < 2 ||  action === 'down' && limit > 0;
 },
 ```

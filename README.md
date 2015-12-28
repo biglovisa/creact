@@ -255,8 +255,6 @@ return (
 
 *Better - we have multiple sibling HTML elements which share a parent div.*
 
-<br>
-
 ```
 return (
   <div>
@@ -594,7 +592,7 @@ Let's move some code around. Move `getInitialState()` and `componentDidMount()` 
 
 How does `AllSkills` get access to all the skills?
 
-Parents can send variables down its children as `props`. `Props` are immutable in the child. Let's send the skills array from the `Body` component to the `AllSkills` component as props.
+Parents can send variables down to their children as `props`. `Props` are immutable in the child. Let's send the skills array from the `Body` component to the `AllSkills` component as props.
 
 <br>
 
@@ -1001,15 +999,19 @@ We need to update `AllSkills` and create `Skill` components when we iterate over
 
 **app/assets/javascripts/components/_all_skills.js.jsx**
 ```
-var skills = this.props.skills.map((skill) => {
-  return (
-    <div key={skill.id}>
-      <Skill skill={skill}
-             handleDelete={this.handleDelete.bind(this, skill.id)}
-             handleEdit={this.handleEdit}/>
-    </div>
-  )
-});
+render () {
+  var skills = this.props.skills.map((skill) => {
+    return (
+      <div key={skill.id}>
+        <Skill skill={skill}
+               handleDelete={this.handleDelete.bind(this, skill.id)}
+               handleEdit={this.handleEdit}/>
+      </div>
+    )
+  });
+
+  // return () the skills array
+}
 ```
 
 <br>
@@ -1087,7 +1089,7 @@ var Skill = React.createClass({
 
 <br>
 
-And now what? We need to render the component conditionally based on our state. If `this.state.editable` is false, we want to render `h3` tag with the name and the `p` tag with the details as normal. If not, we want to render and input field for the name and a textarea for the details. Sounds like we need ternary operator.
+And now what? We need to render the component conditionally based on our state. If `this.state.editable` is false, we want to render `h3` tag with the name and the `p` tag with the details as normal. If not, we want to render an input field for the name and a textarea for the details. Sounds like we need ternary operator.
 
 <br>
 
@@ -1483,7 +1485,7 @@ handleLevelChange(action) {
   }
 },
 
-levlelCanBeChanged(action, limit) {
+levelCanBeChanged(action, limit) {
   return action === 'up' && limit < 2 ||  action === 'down' && limit > 0;
 },
 ```

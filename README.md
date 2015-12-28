@@ -552,8 +552,8 @@ Check in the browser if it works and... great! Now, we need to fetch the form va
 <br>
 
 ```
-let name    = this.refs.name.value;
-let details = this.refs.details.value;
+var name    = this.refs.name.value;
+var details = this.refs.details.value;
 console.log(name, details);
 ```
 
@@ -567,8 +567,8 @@ Let's send the form values over to the server so we can create a new skill.
 
 ```
 handleClick() {
-  let name    = this.refs.name.value;
-  let details = this.refs.details.value;
+  var name    = this.refs.name.value;
+  var details = this.refs.details.value;
 
   $.ajax({
     url: '/api/v1/skills',
@@ -684,7 +684,7 @@ Now we need to add it to `this.state.skills`. We can use `concat()` to add the s
 **app/assets/javascripts/components/_body.js.jsx**
 ```
 handleSubmit(skill) {
-  let newState = this.state.skills.concat(skill);
+  var newState = this.state.skills.concat(skill);
   this.setState({ skills: newState })
 },
 ```
@@ -709,7 +709,7 @@ var Body = React.createClass({
   },
 
   handleSubmit(skill) {
-    let newState = this.state.skills.concat(skill);
+    var newState = this.state.skills.concat(skill);
     this.setState({ skills: newState })
   },
 
@@ -731,7 +731,7 @@ var Body = React.createClass({
 ```
 var AllSkills = React.createClass({
   render() {
-    let skills = this.props.skills.map((skill) => {
+    var skills = this.props.skills.map((skill) => {
       return (
         <div key={skill.id}>
           <h3>{skill.name}</h3>
@@ -757,8 +757,8 @@ var AllSkills = React.createClass({
 ```
 var NewSkill = React.createClass({
   handleClick() {
-    let name    = this.refs.name.value;
-    let details = this.refs.details.value;
+    var name    = this.refs.name.value;
+    var details = this.refs.details.value;
 
     $.ajax({
       url: '/api/v1/skills',
@@ -810,7 +810,7 @@ var AllSkills = React.createClass({
   },
 
   render() {
-    let skills = this.props.skills.map((skill) => {
+    var skills = this.props.skills.map((skill) => {
       return (
         <div key={skill.id}>
           <h3>{skill.name}</h3>
@@ -934,7 +934,7 @@ handleDelete(id) {
 },
 
 removeIdeaFromDOM(id) {
-  let newSkills = this.state.skills.filter((skill) => {
+  var newSkills = this.state.skills.filter((skill) => {
     return skill.id != id;
   });
 
@@ -983,7 +983,7 @@ handleEdit() {
 
 Do you get feedback in your browser console when we click `Edit`? Cool.
 
-What needs to happen in `handleEdit()`? For the specific skill that the user asked to edit, add an edit form and let the user edit the values and then submit. If we were using jQuery, we could have just used jQuery's `$.append()` function. However, as this StackOverflow succintly puts it, it's not a [React way](http://stackoverflow.com/questions/31823801/how-to-append-and-prepend-element-in-react-js-like-jquery). We should render components conditionally based on our state and props.
+What needs to happen in `handleEdit()`? For the specific skill that the user asked to edit, add an edit form and var the user edit the values and then submit. If we were using jQuery, we could have just used jQuery's `$.append()` function. However, as this StackOverflow succintly puts it, it's not a [React way](http://stackoverflow.com/questions/31823801/how-to-append-and-prepend-element-in-react-js-like-jquery). We should render components conditionally based on our state and props.
 
 So if each skill needs to know whether or not its `Edit` button has been clicked (information which we should store as state), this seems like a good time to refactor out our current skill template in `AllSkills` to its own component.
 
@@ -1001,7 +1001,7 @@ We need to update `AllSkills` and create `Skill` components when we iterate over
 
 **app/assets/javascripts/components/_all_skills.js.jsx**
 ```
-let skills = this.props.skills.map((skill) => {
+var skills = this.props.skills.map((skill) => {
   return (
     <div key={skill.id}>
       <Skill skill={skill}
@@ -1099,7 +1099,7 @@ render() {
   var name = this.state.editable ? <input type='text' defaultValue={this.props.skill.name} />
                                  : <h3>{this.props.skill.name}</h3>
 
-  let details = this.state.editable ? <textarea type='text' defaultValue={this.props.skill.details}></textarea>
+  var details = this.state.editable ? <textarea type='text' defaultValue={this.props.skill.details}></textarea>
                                     : <p>{this.props.skill.details}</p>
   return (
     <div>
@@ -1158,7 +1158,7 @@ var name = this.state.editable ? <input type='text'
                                         defaultValue={this.props.skill.name} />
                                : <h3>{this.props.skill.name}</h3>
 
-let details = this.state.editable ? <textarea type='text'
+var details = this.state.editable ? <textarea type='text'
                                               ref='details'
                                               defaultValue={this.props.skill.details}>
                                     </textarea>
@@ -1175,8 +1175,8 @@ Let's add some code to `handleEdit()`.
 
 ```
 if (this.state.editable) {
-  let name    = this.refs.name.value;
-  let details = this.refs.details.value;
+  var name    = this.refs.name.value;
+  var details = this.refs.details.value;
   console.log('in handleEdit', this.state.editable, name, details);
 }
 
@@ -1197,9 +1197,9 @@ Fetch the values, compose a skill object and trigger the chain by executing the 
 ```
 onUpdate() {
   if (this.state.editable) {
-    let name    = this.refs.name.value;
-    let details = this.refs.details.value;
-    let skill = { name: name, details: details }
+    var name    = this.refs.name.value;
+    var details = this.refs.details.value;
+    var skill = { name: name, details: details }
 
     this.props.handleUpdate(skill);
   }
@@ -1221,7 +1221,7 @@ onUpdate(skill) {
 },
 
 render() {
-  let skills = this.props.skills.map((skill) => {
+  var skills = this.props.skills.map((skill) => {
     return (
       <div key={skill.id}>
         <Skill skill={skill}
@@ -1263,12 +1263,12 @@ Since `this.state.skills` is an array of objects it makes most sense to just swa
 <br>
 
 ```
-let id      = this.props.skill.id;
-let name    = this.refs.name.value;
-let details = this.refs.details.value;
-let level   = this.props.skill.level;
+var id      = this.props.skill.id;
+var name    = this.refs.name.value;
+var details = this.refs.details.value;
+var level   = this.props.skill.level;
 
-let skill = {id: id, name: name, details: details, level: level }
+var skill = {id: id, name: name, details: details, level: level }
 ```
 
 <br>
@@ -1308,7 +1308,7 @@ handleUpdate(skill) {
 },
 
 updateSkills(skill) {
-  let skills = this.state.skills.filter((s) => { return s.id != skill.id });
+  var skills = this.state.skills.filter((s) => { return s.id != skill.id });
   skills.push(skill);
 
   this.setState({ skills: skills });
@@ -1420,17 +1420,17 @@ Now we need logic in `handleLevelChange()` to decide whether or not to update th
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
 handleLevelChange(action) {
-  let levels  = ['bad', 'halfbad', 'fantastic'];
-  let name    = this.props.skill.name;
-  let details = this.props.skill.details;
-  let level   = this.props.skill.level;
-  let index   = levels.indexOf(level);
+  var levels  = ['bad', 'halfbad', 'fantastic'];
+  var name    = this.props.skill.name;
+  var details = this.props.skill.details;
+  var level   = this.props.skill.level;
+  var index   = levels.indexOf(level);
 
   if (action === 'up' && index < 2) {
-    let newLevel = levels[index + 1];
+    var newLevel = levels[index + 1];
     this.props.handleUpdate({id: this.props.skill.id, name: name, details: details, level: newLevel})
   } else if (action === 'down' && index > 0) {
-    let newLevel = levels[index - 1];
+    var newLevel = levels[index - 1];
     this.props.handleUpdate({id: this.props.skill.id, name: name, details: details, level: newLevel})
   }
 },
@@ -1460,7 +1460,7 @@ That gave me this:
 ```
 handleLevelChange(action) {
   if (this.levelCanBeChanged(action)) {
-    let skill = this.updatedSkill()
+    var skill = this.updatedSkill()
     this.props.handleUpdate(skill);
   }
 },
@@ -1474,11 +1474,11 @@ handleLevelChange(action) {
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
 handleLevelChange(action) {
-  let levels  = ['bad', 'halfbad', 'fantastic'];
-  let level   = levels.indexOf(this.props.skill.level);
+  var levels  = ['bad', 'halfbad', 'fantastic'];
+  var level   = levels.indexOf(this.props.skill.level);
 
   if (this.levelCanBeChanged(action, level)) {
-    let skill = this.updatedSkill()
+    var skill = this.updatedSkill()
     this.props.handleUpdate(skill);
   }
 },
@@ -1497,13 +1497,13 @@ Next up is `updatedSkill()`. We return an object with an updated level that is s
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
 updatedSkill(action, index) {
-  let id       = this.props.skill.id;
-  let name     = this.props.skill.name;
-  let details  = this.props.skill.details;
+  var id       = this.props.skill.id;
+  var name     = this.props.skill.name;
+  vardetails  = this.props.skill.details;
 
-  let levels   = ['bad', 'halfbad', 'fantastic'];
-  let change   = action === 'up' ? 1 : - 1;
-  let newLevel = action ? levels[index + change] : this.props.skill.level;
+  var levels   = ['bad', 'halfbad', 'fantastic'];
+  var change   = action === 'up' ? 1 : - 1;
+  var newLevel = action ? levels[index + change] : this.props.skill.level;
 
   return {id: id, name: name, details: details, level: newLevel}
 },
@@ -1518,8 +1518,8 @@ We can also refactor out the part where we set the new level to a function.
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
 getNewLevel(action, index) {
-  let levels   = ['bad', 'halfbad', 'fantastic'];
-  let change   = action === 'up' ? 1 : - 1;
+  var levels   = ['bad', 'halfbad', 'fantastic'];
+  var change   = action === 'up' ? 1 : - 1;
 
   return action ? levels[index + change] : this.props.skill.level;
 },
@@ -1535,7 +1535,7 @@ This looks better, but there is more to do in this component. `onUpdate()` can b
 ```
 onUpdate() {
   if (this.state.editable) {
-    let skill   = { id: this.props.skill.id,
+    var skill   = { id: this.props.skill.id,
                     name: this.refs.name.value,
                     details: this.refs.details.value,
                     level: this.props.skill.level }
@@ -1557,8 +1557,8 @@ The handler function for the level change, `onLevelChange`, can be renamed to `o
 ```
 onUpdateLevel(action) {
   if (this.canChangeLevel(action)) {
-    let level = this.getNewLevel(action)
-    let skill = {id: this.props.skill.id, level: level }
+    var level = this.getNewLevel(action)
+    var skill = {id: this.props.skill.id, level: level }
 
     this.props.handleUpdate(skill);
   }

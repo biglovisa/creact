@@ -27,7 +27,8 @@ In this tutorial we are going to clone down a repo with a Rails API and build ou
 In your terminal, clone the project:
 
 ```
-$ git clone git@github.com:applegrain/creact-starter.git
+$ git clone git@github.com:applegrain/creact-starter.git; cd creact-starter
+$ bundle install
 $ rake db:setup
 ```
 

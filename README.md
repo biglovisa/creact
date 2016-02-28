@@ -1214,7 +1214,7 @@ This component is just passing it up to its parent.
 **app/assets/javascripts/components/_all_skills.js.jsx**
 ```
 onUpdate(skill) {
-  this.props.onUpdate(skill);
+  this.props.handleUpdate(skill);
 },
 
 render() {
@@ -1247,7 +1247,7 @@ render() {
       <NewSkill handleSubmit={this.handleSubmit} />
       <AllSkills skills={this.state.skills}
                  handleDelete={this.handleDelete}
-                 onUpdate={this.handleUpdate} />
+                 handleUpdate={this.handleUpdate} />
     </div>
   )
 }

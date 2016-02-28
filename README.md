@@ -921,12 +921,12 @@ handleDelete(id) {
     url: `/api/v1/skills/${id}`,
     type: 'DELETE',
     success: () => {
-      this.removeIdeaFromDOM(id);
+      this.removeSkillFromDOM(id);
     }
   });
 },
 
-removeIdeaFromDOM(id) {
+removeSkillFromDOM(id) {
   var newSkills = this.state.skills.filter((skill) => {
     return skill.id != id;
   });

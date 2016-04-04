@@ -1496,7 +1496,7 @@ Next up is `updatedSkill()`. We return an object with an updated level that is s
 updatedSkill(action, index) {
   var id       = this.props.skill.id;
   var name     = this.props.skill.name;
-  vardetails  = this.props.skill.details;
+  var details  = this.props.skill.details;
 
   var levels   = ['bad', 'halfbad', 'fantastic'];
   var change   = action === 'up' ? 1 : - 1;

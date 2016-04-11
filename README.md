@@ -384,7 +384,7 @@ var AllSkills = React.createClass({
 
 <br>
 
-Now, when we get the response back from the server, we want to update `skills` and set it to the value of the skills we got from the server. We want to store it as state becasue when we add new skills, we want to be able to render them on the page without having to ping the index action of our API again. By using another of React's built in methods, this isn't bad at all.
+Now, when we get the response back from the server, we want to update `skills` and set it to the value of the skills we got from the server. We want to store it as state because when we add new skills, we want to be able to render them on the page without having to ping the index action of our API again. By using another of React's built in methods, this isn't bad at all.
 
 <br>
 

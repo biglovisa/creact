@@ -3,13 +3,13 @@ var Skill = React.createClass({
     return { editable: false }
   },
 
-  onUpdate() {
+  handleEdit() {
     if (this.state.editable) {
       let skill   = { id: this.props.skill.id,
                       name: this.refs.name.value,
                       details: this.refs.details.value }
 
-      this.props.handleUpdate(skill);
+      this.props.handleEdit(skill);
     }
 
     this.setState({ editable: !this.state.editable })
@@ -20,7 +20,7 @@ var Skill = React.createClass({
       let level = this.getNewLevel(action)
       let skill = {id: this.props.skill.id, level: level }
 
-      this.props.handleUpdate(skill);
+      this.props.handleEdit(skill);
     }
   },
 
@@ -76,7 +76,7 @@ var Skill = React.createClass({
           Delete
         </button>
 
-        <button onClick={this.onUpdate}>{this.state.editable ? 'Submit' : 'Edit' }</button>
+        <button onClick={this.handleEdit}>{this.state.editable ? 'Submit' : 'Edit' }</button>
       </div>
     )
   }

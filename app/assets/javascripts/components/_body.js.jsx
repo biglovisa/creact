@@ -30,7 +30,7 @@ var Body = React.createClass({
     this.setState({ skills: newSkills });
   },
 
-  handleUpdate(skill) {
+  handleEdit(skill) {
     $.ajax({
       url: `/api/v1/skills/${skill.id}`,
       type: 'PUT',
@@ -54,7 +54,7 @@ var Body = React.createClass({
         <NewSkill handleSubmit={this.handleSubmit} />
         <AllSkills skills={this.state.skills}
                    handleDelete={this.handleDelete}
-                   onUpdate={this.handleUpdate} />
+                   handleEdit={this.handleEdit} />
       </div>
     )
   }

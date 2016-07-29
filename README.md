@@ -976,7 +976,7 @@ handleEdit() {
 
 Do you get feedback in your browser console when we click `Edit`? Cool.
 
-What needs to happen in `handleEdit()`? For the specific skill that the user asked to edit, add an edit form and var the user edit the values and then submit. If we were using jQuery, we could have just used jQuery's `$.append()` function. However, as this StackOverflow succintly puts it, it's not a [React way](http://stackoverflow.com/questions/31823801/how-to-append-and-prepend-element-in-react-js-like-jquery). We should render components conditionally based on our state and props.
+What needs to happen in `handleEdit()`? For the specific skill that the user asked to edit, add an edit form and var the user edit the values and then submit. If we were using jQuery, we could have just used jQuery's `$.append()` function. However, as this StackOverflow succinctly puts it, it's not a [React way](http://stackoverflow.com/questions/31823801/how-to-append-and-prepend-element-in-react-js-like-jquery). We should render components conditionally based on our state and props.
 
 So if each skill needs to know whether or not its `Edit` button has been clicked (information which we should store as state), this seems like a good time to refactor out our current skill template in `AllSkills` to its own component.
 
@@ -1175,6 +1175,7 @@ if (this.state.editable) {
   var name    = this.refs.name.value;
   var details = this.refs.details.value;
   console.log('in handleEdit', this.state.editable, name, details);
+  this.onUpdate();
 }
 
 this.setState({ editable: !this.state.editable })
@@ -1186,19 +1187,19 @@ What are we trying to find out here? When we hit this function and `this.state.e
 
 Cool. Let's walk up the chain, from `Skill` to `AllSkills` to `Body` and update the specific skill in the `Body` component. Why update the skill in the `Body` component and not  right away in the `Skill` component? Because we store all skills as state in the `Body` component and data should be updated in one place.
 
-Fetch the values, compose a skill object and trigger the chain by executing the `handleEdit()` function reference passed down by the parent.
+Fetch the values, compose a skill object and trigger the chain by executing the `handleUpdate()` function reference passed down by the parent.
 
 <br>
 
 **app/assets/javascripts/components/_skill.js.jsx**
 ```
-handleEdit() {
+onUpdate() {
   if (this.state.editable) {
     var name    = this.refs.name.value;
     var details = this.refs.details.value;
     var skill = { name: name, details: details }
 
-    this.props.handleEdit(skill);
+    this.props.handleUpdate(skill);
   }
   this.setState({ editable: !this.state.editable })
 },
@@ -1213,8 +1214,8 @@ This component is just passing it up to its parent.
 
 **app/assets/javascripts/components/_all_skills.js.jsx**
 ```
-handleEdit(skill) {
-  this.props.handleEdit(skill);
+onUpdate(skill) {
+  this.props.handleUpdate(skill);
 },
 
 render() {
@@ -1223,7 +1224,7 @@ render() {
       <div key={skill.id}>
         <Skill skill={skill}
                handleDelete={this.handleDelete.bind(this, skill.id)}
-               handleEdit={this.onhandleEditUpdate}/>
+               handleUpdate={this.onUpdate}/>
       </div>
     )
   });
@@ -1237,8 +1238,8 @@ This is the end of the chain and where we use the `skill` object passed up to up
 
 **app/assets/javascripts/components/_body.js.jsx**
 ```
-handleEdit(skill) {
-  console.log(skill, 'in handleEdit');
+handleUpdate(skill) {
+  console.log(skill, 'in handleUpdate');
 },
 
 render() {
@@ -1247,7 +1248,7 @@ render() {
       <NewSkill handleSubmit={this.handleSubmit} />
       <AllSkills skills={this.state.skills}
                  handleDelete={this.handleDelete}
-                 handleEdit={this.handleEdit} />
+                 handleUpdate={this.handleUpdate} />
     </div>
   )
 }
@@ -1270,12 +1271,12 @@ var skill = {id: id, name: name, details: details, level: level }
 
 <br>
 
-In `handleEdit()` in the `Body` component we need to swap out the old object with the new one - and make an Ajax call to update the database.
+In `handleUpdate()` in the `Body` component we need to swap out the old object with the new one - and make an Ajax call to update the database.
 
 <br>
 
 ```
-handleEdit(skill) {
+handleUpdate(skill) {
   $.ajax({
     url: `/api/v1/skills/${skill.id}`,
     type: 'PUT',
@@ -1296,7 +1297,7 @@ And now let's write the callback that will swap out the objects.
 <br>
 
 ```
-handleEdit(skill) {
+handleUpdate(skill) {
     // ajax stuffs
     success: () => {
       this.updateSkills(skill)
@@ -1382,7 +1383,7 @@ Let's write down a todo-list for this feature.
 2. In the click handler, check if it's possible to decrease/increase the level (is it already the lowest/highest value?)
 3. Depending on #2, send a request to the server to update the status
 
-For #3 we can use the same chain we used for editing the name and the details (`this.props.handleEdit()`).
+For #3 we can use the same chain we used for editing the name and the details (`this.props.handleUpdate()`).
 
 Let's add a click listener for both arrow buttons and bind arguments to them.
 
@@ -1425,10 +1426,10 @@ handleLevelChange(action) {
 
   if (action === 'up' && index < 2) {
     var newLevel = levels[index + 1];
-    this.props.handleEdit({id: this.props.skill.id, name: name, details: details, level: newLevel})
+    this.props.handleUpdate({id: this.props.skill.id, name: name, details: details, level: newLevel})
   } else if (action === 'down' && index > 0) {
     var newLevel = levels[index - 1];
-    this.props.handleEdit({id: this.props.skill.id, name: name, details: details, level: newLevel})
+    this.props.handleUpdate({id: this.props.skill.id, name: name, details: details, level: newLevel})
   }
 },
 
@@ -1458,7 +1459,7 @@ That gave me this:
 handleLevelChange(action) {
   if (this.levelCanBeChanged(action)) {
     var skill = this.updatedSkill()
-    this.props.handleEdit(skill);
+    this.props.handleUpdate(skill);
   }
 },
 
@@ -1476,7 +1477,7 @@ handleLevelChange(action) {
 
   if (this.levelCanBeChanged(action, level)) {
     var skill = this.updatedSkill()
-    this.props.handleEdit(skill);
+    this.props.handleUpdate(skill);
   }
 },
 
@@ -1524,20 +1525,20 @@ getNewLevel(action, index) {
 
 <br>
 
-This looks better, but there is more to do in this component. `handleEdit()` can be made better. Let's make it a bit more readable.
+This looks better, but there is more to do in this component. `onUpdate()` can be made better. Let's make it a bit more readable.
 
 <br>
 
 **app/assets/components/javascripts/_skill.js.jsx**
 ```
-handleEdit() {
+onUpdate() {
   if (this.state.editable) {
     var skill   = { id: this.props.skill.id,
                     name: this.refs.name.value,
                     details: this.refs.details.value,
                     level: this.props.skill.level }
 
-    this.props.handleEdit(skill);
+    this.props.handleUpdate(skill);
   }
 
   this.setState({ editable: !this.state.editable })
@@ -1546,7 +1547,7 @@ handleEdit() {
 
 <br>
 
-The handler function for the level change, `onLevelChange`, can be renamed to `onUpdateLevel` to better match the naming pattern we have for the editing handler function. To make the following code working below I had to update the implementation of `this.props.handleEdit`, which is `handleEdit()` in the `Body` component. In this function we are now only passing up the attributes we need to update (we need the id for the Ajax call). We can therefore also drop the `level` attribute in the skill object in `handleEdit()` in the `Skill` component.
+The handler function for the level change, `onLevelChange`, can be renamed to `onUpdateLevel` to better match the naming pattern we have for the editing handler function. To make the following code working below I had to update the implemenation of `this.props.handleUpdate`, `handleUpdate()` in the `Body` component. In this function we are now only passing up the attributes we need to update (we need the id for the Ajax call). We can therefore also drop the `level` attribute in the skill object in `onUpdate()`.
 
 <br>
 
@@ -1557,7 +1558,7 @@ onUpdateLevel(action) {
     var level = this.getNewLevel(action)
     var skill = {id: this.props.skill.id, level: level }
 
-    this.props.handleEdit(skill);
+    this.props.handleUpdate(skill);
   }
 },
 ```
@@ -1570,7 +1571,7 @@ Since we are no longer passing up a full skill object we can no longer use it to
 
 **app/assets/javascripts/components/_body.js.jsx**
 ```
-handleEdit(skill) {
+handleUpdate(skill) {
   $.ajax({
     url: `/api/v1/skills/${skill.id}`,
     type: 'PUT',

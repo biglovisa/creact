@@ -976,7 +976,7 @@ handleEdit() {
 
 Do you get feedback in your browser console when we click `Edit`? Cool.
 
-What needs to happen in `handleEdit()`? For the specific skill that the user asked to edit, add an edit form and var the user edit the values and then submit. If we were using jQuery, we could have just used jQuery's `$.append()` function. However, as this StackOverflow succintly puts it, it's not a [React way](http://stackoverflow.com/questions/31823801/how-to-append-and-prepend-element-in-react-js-like-jquery). We should render components conditionally based on our state and props.
+What needs to happen in `handleEdit()`? For the specific skill that the user asked to edit, add an edit form and var the user edit the values and then submit. If we were using jQuery, we could have just used jQuery's `$.append()` function. However, as this StackOverflow succinctly puts it, it's not a [React way](http://stackoverflow.com/questions/31823801/how-to-append-and-prepend-element-in-react-js-like-jquery). We should render components conditionally based on our state and props.
 
 So if each skill needs to know whether or not its `Edit` button has been clicked (information which we should store as state), this seems like a good time to refactor out our current skill template in `AllSkills` to its own component.
 

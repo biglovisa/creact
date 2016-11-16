@@ -20,7 +20,7 @@ var AllSkills = React.createClass({
 
     return (
       <div>
-        { skills }
+        {skills}
       </div>
     )
   }

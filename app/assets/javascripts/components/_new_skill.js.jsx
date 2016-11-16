@@ -1,7 +1,9 @@
 var NewSkill = React.createClass({
-  render(){
+  render() {
     return (
-      <h1>Appleeeee</h1>
+      <div>
+        <h1>new skill</h1>
+      </div>
     )
   }
-})
+});

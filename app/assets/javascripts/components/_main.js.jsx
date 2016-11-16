@@ -1,6 +1,6 @@
 var Main = React.createClass({
   render() {
-    return (
+    return(
       <div>
         <Header />
         <Body />

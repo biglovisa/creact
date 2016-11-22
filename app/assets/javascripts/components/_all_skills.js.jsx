@@ -3,7 +3,7 @@ var AllSkills = React.createClass({
     return { skills: [] }
   },
 
-  componentDidMount(){
+  componentDidMount() {
     $.getJSON('/api/v1/skills.json', (response) => { this.setState({ skills: response }) });
   },
 

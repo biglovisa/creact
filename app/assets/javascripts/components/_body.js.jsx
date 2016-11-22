@@ -3,6 +3,7 @@ var Body = React.createClass({
     return (
       <div>
         <AllSkills />
+        <NewSkill />
       </div>
     )
   }

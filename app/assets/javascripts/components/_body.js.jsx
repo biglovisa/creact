@@ -8,13 +8,14 @@ var Body = React.createClass({
   },
 
   handleSubmit(skill) {
-    console.log(skill);
-  }
+    var newState = this.state.skills.concat(skill);
+    this.setState({ skills: newState })
+  },
 
   render() {
     return (
       <div>
-        <NewSkill />
+        <NewSkill handleSubmit={this.handleSubmit} />
         <AllSkills skills={this.state.skills} />
       </div>
     )

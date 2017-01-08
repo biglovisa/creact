@@ -3475,7 +3475,6 @@ filterSkills(value) {
   }
 ```
 The above code will filter on 'bad', 'halfbad', and 'fantastic' skill levels, but has two big problems. First, the 'All' option will not return all of the skills. Second, this code does not follow best practices because of the repetition and multiple conditional statements.
-<br>
 
 It's time to refactor and figure out how to handle the 'all' functionality. Lets start by handling the 'all'. 
 The best way to do this, is to create a new property for our Body within our ComponentDidMount function. We will do this because we want to avoid making additional Ajax calls when the user wants to filter by different levels.

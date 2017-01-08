@@ -1702,8 +1702,38 @@ Since we bound the object 'this' to the function call, in our updateFilter, 'thi
 event.target.value
 ```
 
-
-
+If everything is working properly, when you reload the page and select an option from the selector, you should hit the debugger within the filterSkills function. You should also see "about to filter" logged to the console. From the console, you can type "value" and you will get the value you selected from the dropdown.
+<br>
+Next we need actually make the filterSkills function filter our skills list based on the value passed in from the select input.
+_body.js.jsx
+```
+filterSkills(value) {
+    // Create a variable called skills set to an empty string
+    var skills = ''
+    // check if there is an existing allSkills property in the state object
+    if(this.state.allSkills) {
+      // if allSkills exists, we know that the skill list has been filtered once
+      // before, so we set the skills variable to equal all the skills.
+      skills = this.state.allSkills;
+    } else {
+      // if this is the first time filtering, we set the variable skills to equal
+      // all of the skills.
+      skills = this.state.skills;
+    }
+    // Filter out any skills that do not match the selected value.
+    skills = skills.filter((skill) => { return skill.level === value });
+    // If this.state.allSkills exists
+    if(this.state.allSkills) {
+      // We can just set the state of the skills to be our skills variable
+      this.setState({ skills: skills });
+    } else {
+      // We additionally set allSkills to be the original list of skills.
+      this.setState({ skills: skills, allSkills: this.state.skills });
+    }
+  }
+```
+The above code will filter on 'bad', 'halfbad', and 'fantastic' skill levels, but has two big problems. First, the 'All' option will not return all of the skills. Second, this code does not follow best practices because of the repetition and multiple conditional statements.
+<br>
 ### 13. You are awesome
 ---
 ![](http://reactiongifs.us/wp-content/uploads/2013/02/youre_awesome_carl_sagan.gif)

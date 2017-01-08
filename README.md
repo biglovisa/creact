@@ -1648,8 +1648,9 @@ To make sure the FilterSelect component looks the way we want, we will add it to
 If everything is wired correctly, you should now see a select input with four options in between the create skill form and the AllSkills list.
 <br>
 
-So now we will actually create our filtering functionality. So in the big picture we know that we want to filter based on the level, so will start our journey by passing a filter property to our FilterSelect component (_body.js.jsx).
+So now we will actually create our filtering functionality. So in the big picture we know that we want to filter based on the level, so will start our journey by passing a filter property to our FilterSelect component.
 
+_body.js.jsx
 ```
   render() {
     return (
@@ -1677,6 +1678,7 @@ We will add the functionality of filtering in the above filterSkills(value) func
 <br>
 
 Let's add an onChange event to our select input that will call the updateFilter function. In order to accomplish that we must bind the object 'this' to our function call.
+
 _filter_selects.js.jsx
 ```
 render (){
@@ -1691,6 +1693,7 @@ render (){
 ```
 <br>
 Now we need to create an updateFilter function within the FilterSelect component.
+
 _filter_selects.js.jsx
 ```
 updateFilter(event) {
@@ -1705,6 +1708,7 @@ event.target.value
 If everything is working properly, when you reload the page and select an option from the selector, you should hit the debugger within the filterSkills function. You should also see "about to filter" logged to the console. From the console, you can type "value" and you will get the value you selected from the dropdown.
 <br>
 Next we need actually make the filterSkills function filter our skills list based on the value passed in from the select input.
+
 _body.js.jsx
 ```
 filterSkills(value) {
@@ -1735,6 +1739,20 @@ filterSkills(value) {
 The above code will filter on 'bad', 'halfbad', and 'fantastic' skill levels, but has two big problems. First, the 'All' option will not return all of the skills. Second, this code does not follow best practices because of the repetition and multiple conditional statements.
 <br>
 It's time to refactor and figure out how to handle the 'all' functionality. Lets start by handling the 'all'. 
+The best way to do this, is to create a new property for our Body within our ComponentDidMount function. We will do this because we want to avoid making additional Ajax calls when the user wants to filter by different levels.
+
+_body.js.jsx
+```
+componentDidMount() {
+   $.getJSON('/api/v1/skills.json', (response) => {
+     this.setState({ skills: response,
+                     allSkills: response })
+   });
+ },
+```
+
+
+
 
 ### 13. You are awesome
 ---

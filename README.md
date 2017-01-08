@@ -1750,9 +1750,15 @@ componentDidMount() {
    });
  },
 ```
-
-
-
+So, now that we have access to AllSkills at all times within our Body component, we are set to refactore our filterSkills function, and handle the 'all' functionality.
+```
+filterSkills(value) {
+    skills = value === 'all' ? this.state.allSkills :
+      this.state.allSkills.filter((skill) => { return skill.level === value });
+    this.setState({skills: skills})
+  }
+```
+Essentially the first two lines of the code above are setting the skills variable to be either `this.state.allSkills` when the value passed in equals 'all' or filter the AllSkills list to the specific value passed in when it is different from all (in this case, 'bad', 'halfbad', or 'fantastic'). The last line of the code `this.setState({skills: skills}` sets the state of the Body component to equal the skills variable. Whenever we call `setState` the render function is invoked and the component is rendered to the page based on its new state.
 
 ### 13. You are awesome
 ---

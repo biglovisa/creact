@@ -3517,7 +3517,7 @@ If you are interested in adding sections to this tutorial or find areas for impr
 nd, this code does not follow best practices because of the repetition and multiple conditional statements.
 <br>
 It's time to refactor and figure out how to handle the 'all' functionality. Lets start by handling the 'all'. 
-The best way to do this, is to create a new property for our Body within our ComponentDidMount function. We will do this because we want to avoid making additional Ajax calls when the user wants to filter by different levels.
+The best way to do this, is to create a new property for our Body component within our ComponentDidMount function. We will do this because we want to avoid making additional AJAX calls when the user wants to filter by different levels.
 
 _body.js.jsx
 ```
@@ -3528,7 +3528,7 @@ componentDidMount() {
    });
  },
 ```
-So, now that we have access to AllSkills at all times within our Body component, we are set to refactore our filterSkills function, and handle the 'all' functionality.
+So, now that we have access to AllSkills at all times within our Body component, we are all set to refactor our filterSkills function, and handle the 'all' functionality.
 ```
 filterSkills(value) {
     skills = value === 'all' ? this.state.allSkills :
@@ -3536,7 +3536,9 @@ filterSkills(value) {
     this.setState({skills: skills})
   }
 ```
-Essentially the first two lines of the code above are setting the skills variable to be either `this.state.allSkills` when the value passed in equals 'all' or filter the AllSkills list to the specific value passed in when it is different from all (in this case, 'bad', 'halfbad', or 'fantastic'). The last line of the code `this.setState({skills: skills}` sets the state of the Body component to equal the skills variable. Whenever we call `setState` the render function is invoked and the component is rendered to the page based on its new state.
+Essentially the first two lines of the code above are setting the skills variable. If the value passed in is 'all', skills will be set to `this.state.allSkills`. Otherwise we will filter the `this.state.allSkills` property based on the value from the select input. The last line of the code `this.setState({skills: skills}` sets the state of the Body component to equal the skills variable. Whenever we call `setState` the render function is invoked and the component is rendered to the page based on its new state.
+
+Try it out for yourself and you should be able to filter the skills on the page!
 
 ### 13. You are awesome
 ---

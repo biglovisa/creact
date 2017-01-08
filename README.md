@@ -1598,9 +1598,116 @@ end
 
 <br>
 
-### 12. You are awesome
+### 12. Filter Skills by Level
+---
+
+Our next step is to filter skills based on the level. The first the will be to create a FilterSelect component.
+
+```
+touch app/javascripts/components/_filter_selects.js.jsx
+```
+In our _filter_selects we will create a component that has a selector and label. It is important to highlight that the syntax below uses ES6 class declaration but the function is still the same as previous method to declaring components.
+Our FilterSelect class renders now a Label, and a Select input with 4 (four) options.
+
+```
+class FilterSelect extends React.Component {
+  render (){
+    return(
+      <div>
+        <label>
+          Filter By
+        </label>
+        <select className="form-control">
+          <option value="all">All</option>
+          <option value="bad">Bad</option>
+          <option value="halfbad">Halfbad</option>
+          <option value="fantastic">Fantastic</option>
+        </select>
+      </div>
+    )
+  }
+}
+```
+<br>
+
+To make sure the FilterSelect component looks the way we want, we will add it to the body component render function in our _body.js.jsx file, fire up the server(if you haven't yet done so) with `rails s`, and then navigate to `localhost:3000`.
+
+```
+  render() {
+    return (
+      <div className="container">
+        <NewSkill handleSubmit={this.handleSubmit} />
+        <FilterSelect/>
+        <AllSkills skills={this.state.skills}
+                   handleDelete={this.handleDelete}
+                   handleUpdate={this.handleUpdate} />
+      </div>
+    )
+  }
+```
+If everything is wired correctly, you should now see a select input with four options in between the create skill form and the AllSkills list.
+<br>
+
+So now we will actually create our filtering functionality. So in the big picture we know that we want to filter based on the level, so will start our journey by passing a filter property to our FilterSelect component (_body.js.jsx).
+
+```
+  render() {
+    return (
+      <div className="container">
+        <NewSkill handleSubmit={this.handleSubmit} />
+        <FilterSelect filter={this.filterSkills} />
+        <AllSkills skills={this.state.skills}
+                   handleDelete={this.handleDelete}
+                   handleUpdate={this.handleUpdate} />
+      </div>
+    )
+  }
+```
+<br>
+
+I am sure you noticed that inside of our filter property we have a function called filterSkills, so let's go ahead and create that within our _body.js.jsx.
+
+```
+  filterSkills(value) {
+    console.log("about to filter");
+    debugger;
+  },
+```
+We will add the functionality of filtering in the above filterSkills(value) function. But first, let's wire it all together and make sure that when the user changes the select dropdown, this filterSkills function is invoked.
+<br>
+
+Let's add an onChange event to our select input that will call the updateFilter function. In order to accomplish that we must bind the object 'this' to our function call.
+_filter_selects.js.jsx
+```
+render (){
+    return(
+      <div>
+        <label>
+          Filter By
+        </label>
+        <select className="form-control" onChange={this.updateFilter.bind(this)}>
+        
+        ...
+```
+<br>
+Now we need to create an updateFilter function within the FilterSelect component.
+_filter_selects.js.jsx
+```
+updateFilter(event) {
+    this.props.filter(event.target.value)
+  }
+```
+Since we bound the object 'this' to the function call, in our updateFilter, 'this' refers to the entire component. This gives us access to all of the properties of the FilterSelect component. We need the filter property, which we pass into the component when we render it in the body. The filter property points to the filterSkills function in the body component. Let's pass in the value of the select input, which we get from the event object.
+```
+event.target.value
+```
+
+
+
+### 13. You are awesome
 ---
 ![](http://reactiongifs.us/wp-content/uploads/2013/02/youre_awesome_carl_sagan.gif)
+
 
 Possible extensions:
 

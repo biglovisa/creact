@@ -3542,7 +3542,7 @@ componentDidMount() {
 ```
 So, now that we have access to AllSkills at all times within our Body component, we are set to refactore our filterSkills function, and handle the 'all' functionality.
 ```
-filterSkills(value) {
+filterSkillsByLevel(value) {
     skills = value === 'all' ? this.state.allSkills :
       this.state.allSkills.filter((skill) => { return skill.level === value });
     this.setState({skills: skills})

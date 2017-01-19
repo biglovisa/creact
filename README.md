@@ -3340,13 +3340,16 @@ end
 ### 12. Filter Skills by Level
 ---
 
-Our next step is to filter skills based on the level. First let's create a SelectFilter component.
+Our next step is to filter skills based on the level. Our goal is to create a select input that has an option for each level and when changed, will show only the skills at the selected level to the user. So, for example, if the user wants to review the 'halfbad' skills they would select 'halfbad' from our soon to be created dropdown and without having to refresh the page, we would want only the skills with a level of 'halfbad' to show up in our `AllSkills` component.  
+
+First let's create a SelectFilter component.
 
 ```
 touch app/javascripts/components/_select_filter.js.jsx
 ```
 In our _select_filter we will create a component that has a selector and label. Our `SelectFilter` class renders a Label, and a Select input with 4 (four) options (all, bad, halfbad, and fantastic).
 
+**app/assets/components/javascripts/_select_filter.js.jsx**
 ```
 var SelectFilter = React.createClass({
   render (){
@@ -3368,74 +3371,70 @@ var SelectFilter = React.createClass({
 ```
 <br>
 
-To make sure the `SelectFilter` component looks the way we want, we will add it to the Body component in our `_body.js.jsx` file, fire up the server (if you haven't yet done so) with `rails s`, and then navigate to `localhost:3000`.
-
+To make sure the `SelectFilter` component looks the way we want, we will add it to the `Body` component in our `_body.js.jsx` file, fire up the server (if you haven't yet done so) with `rails s`, and then navigate to `localhost:3000`.
+**app/assets/components/javascripts/_body.js.jsx**
 ```
-  render() {
-    return (
-      <div className="container">
-        <NewSkill handleSubmit={this.handleSubmit} />
-        <SelectFilter/>
-        <AllSkills skills={this.state.skills}
-                   handleDelete={this.handleDelete}
-                   handleUpdate={this.handleUpdate} />
+render() {
+  return (
+    <div className="container">
+      <NewSkill handleSubmit={this.handleSubmit} />
+      <SelectFilter/>
+      <AllSkills skills={this.state.skills}
+                 handleDelete={this.handleDelete}
+                 handleUpdate={this.handleUpdate} />
       </div>
-    )
-  }
+  )
+}
 ```
 If everything is wired up correctly, you should now see a select input with the four options in between the `NewSkill` form and the `AllSkills` list.
 <br>
-
-So now we will actually create our filtering functionality. The big picture is that we want to filter based on the level, so will start our journey by passing a `handleFilter` property to our `SelectFilter` component. This property we will call whenever we want to actually filter our skills, so we need to assign it a callback - `this.filterSkillsByLevel`.
-
-_body.js.jsx
+Now we will actually create our filtering functionality. The big picture is that we want to filter based on the level, so we will start our journey by passing a `handleFilter` property to our `SelectFilter` component. This property we will call whenever we want to actually filter our skills, so we need to assign it a callback - `this.filterSkillsByLevel`.
+**app/assets/components/javascripts/_body.js.jsx**
 ```
-  render() {
-    return (
-      <div className="container">
-        <NewSkill handleSubmit={this.handleSubmit} />
-        <SelectFilter handleFilter={this.filterSkillsByLevel} />
-        <AllSkills skills={this.state.skills}
-                   handleDelete={this.handleDelete}
-                   handleUpdate={this.handleUpdate} />
+render() {
+  return (
+    <div className="container">
+      <NewSkill handleSubmit={this.handleSubmit} />
+      <SelectFilter handleFilter={this.filterSkillsByLevel} />
+      <AllSkills skills={this.state.skills}
+                 handleDelete={this.handleDelete}
+                 handleUpdate={this.handleUpdate} />
       </div>
-    )
-  }
+  )
+}
 ```
 <br>
-
 I am sure you noticed that inside of our `handleFilter` property we have a function called `filterSkillsByLevel`, so let's go ahead and create that within our `_body.js.jsx`.
-
+**app/assets/components/javascripts/_body.js.jsx**
 ```
-  filterSkillsByLevel(level) {
-    console.log("about to filter");
-  },
+filterSkillsByLevel(level) {
+  console.log("about to filter");
+},
 ```
 We will add the functionality of filtering in the above `filterSkillsByLevel(level)` function. But first, let's wire it all together and make sure that when the user changes the select dropdown, this `filterSkillsByLevel` function is invoked.
 <br>
-
 Let's add an `onChange` event to our select input that will call the `updateFilter` function. In order to accomplish that we must bind the object 'this' to our function call. In this case, the 'this' object refers to the `SelectFilter` component. This is important because if we did not bind 'this', when we get into the updateFilter function call we would not be able to call `this.state` or `this.props` since in that case, this would refer to the function `updateFilter`, not the component `SelectFilter`. That is a lot of this's and thats and for what its worth, this is probably the toughest part of React!
 
-_select_filter.js.jsx
+**app/assets/components/javascripts/_select_filter.js.jsx**
 ```
 render (){
-    return(
-      <div>
-        <label>
-          Filter By
-        </label>
-        <select className="form-control" onChange={this.updateFilter.bind(this)}>
-        
-        ...
+  return(
+    <div>
+      <label>
+        Filter By
+      </label>
+      <select className="form-control" onChange={this.updateFilter.bind(this)}>  
+    
+    ...
 ```
 <br>
 Now we need to create an updateFilter function within the FilterSelect component which will be invoked whenever there is a change on our element.
 
-_select_filter.js.jsx
+**app/assets/components/javascripts/_select_filter.js.jsx**
 ```
 updateFilter(event) {
-    this.props.handleFilter(event.target.value)
-  }
+  this.props.handleFilter(event.target.value)
+}
 ```
 Remember, since we bound the object 'this' to the function call in our `updateFilter`, 'this' refers to the entire component. This gives us access to all of the properties of the `SelectFilter` component. We need the `handleFilter` property, which we pass into the component when we render it in the Body. The `handleFilter` property points to the `filterSkillsByLevel` function in the `Body` component. 
 ```
@@ -3447,77 +3446,18 @@ Remember, since we bound the object 'this' to the function call in our `updateFi
                                        \
                                       Skills * n
 ```
-For additioanl context, in the above diagram when the user selects a valut to filter by in the `SelectFilter` component, the `handleFilter` property is invoked which sends a message up to the `body` component, which in turn re-renders the list of visible skills.
+For additioanl context, in the above diagram when the user selects a value to filter by in the `SelectFilter` component, the `handleFilter` property is invoked which sends a message up to the `body` component, which in turn re-renders the list of visible skills.
 
 Let's pass in the value of the select input from the `SelectFilter` to the `Body`, which we get from the event object.
 ```
 event.target.value
 ```
-If everything is working properly, when you reload the page and select an option from the selector, you should see "about to filter" logged to the console. From the console, you can type "value" and you will get the value you selected from the dropdown.
+If everything is working properly, when you reload the page and select an option from the selector, you should see "about to filter" logged to the console.
 <br>
-Next we need to actually make the filterSkillsByLevel function filter our skills list based on the value passed in from the select input. We will frist create a variable called skills set to an empty string.
-
-_body.js.jsx
-```
-filterSkillsByLevel(filter) {
-    let skills = ''
-}
-```
-Next we will set up a conditional that will check if there is an exisitng `allSkills` property in the `state` object of the component. If there is such a property we'll handle it one way and if not, we'll do something else.
-```
-filterSkillsByLevel(filter) {
-    let skills = ''
-    if(this.state.allSkills) {
-
-    } else {
-      
-    }
-}
-```
-If there is an `allSkills` property on `state` then we know that the skill list has been filtered once before. We just want our `skills` variable to equal that. This gives us a list of all the skills that we will then filter on. We have not created the `allSkills` property yet, but we'll do that once we actually filter below.
-```
-filterSkillsByLevel(filter) {
-    let skills = ''
-    if(this.state.allSkills) {
-      skills = this.state.allSkills;
-    } else {
-
-    }
-}
-```
-If there is not an `allSkills` property then this is the first time the list is being filtered and we will want to set the skills variable equal to all of the skills in `this.state.skills`. 
-```
-filterSkillsByLevel(filter) {
-    let skills = ''
-    if(this.state.allSkills) {
-      skills = this.state.allSkills;
-    } else {
-      skills = this.state.skills;
-    }
-}
-```
-At this point, we have a variable `skills` that contains all of the skills in our app. Now we need to write the code to filter out the skills that don't match the `filter` argument passed into our `filterSkillsByLevel` function. To do so
+Next we need to actually make the `filterSkillsByLevel` function filter our skills list based on the value passed in from the select input. We will frist make an API call to get all the skills in our application. We do this because the user may have already filtered the list and if we just filtered the list of skills in the current state of the application, we would be working with an incomplete list.
+**app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
-    let skills = ''
-    if(this.state.allSkills) {
-      skills = this.state.allSkills;
-    } else {
-      skills = this.state.skills;
-    }
-    skills = skills.filter((skill) => { return skill.level === value });
-}
-
-```
-Next, if there is an `allSkills` property that already contains all of our skills, we'll just set the `skills` property. If not, we'll make a copy of all the skills and store in `this.state.allSkills`.
-
-The above code will filter on 'bad', 'halfbad', and 'fantastic' skill levels, but it has two big problems in its current form. First, the 'All' option will not return all of the skills. Second, this code does not follow best practices because of the repetition and multiple conditional statements.
-
-It's time to refactor and figure out how to handle the 'all' functionality. Lets start by handling the 'all'. Whenever the user wants to revert back to viewing all of the skills, we'll do an API call because it is inexpensive and more elegant than storing a second copy of all the skills in the state of our application. 
-
-In our  `filterSkillsByLevel` function, let's start by grabbing all of the skills.
-```
-filterSkillsByLevel(value) {
   $.getJSON('/api/v1/skills.json', (response) => {
   
   }

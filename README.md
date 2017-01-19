@@ -3339,16 +3339,15 @@ end
 ### 12. Filter Skills by Level
 ---
 
-Our next step is to filter skills based on the level. First let's create a FilterSelect component.
+Our next step is to filter skills based on the level. First let's create a SelectFilter component.
 
 ```
-touch app/javascripts/components/_filter_selects.js.jsx
+touch app/javascripts/components/_select_filter.js.jsx
 ```
-In our _filter_selects we will create a component that has a selector and label. It is important to highlight that the syntax below uses ES6 class declaration but the function is still the same as the previous method for declaring components.
-Our FilterSelect class renders a Label, and a Select input with 4 (four) options (all, bad, halfbad, and fantastic).
+In our _select_filter we will create a component that has a selector and label. Our SelectFilter class renders a Label, and a Select input with 4 (four) options (all, bad, halfbad, and fantastic).
 
 ```
-class FilterSelect extends React.Component {
+var SelectFilter = React.createClass({
   render (){
     return(
       <div>
@@ -3375,7 +3374,7 @@ To make sure the FilterSelect component looks the way we want, we will add it to
     return (
       <div className="container">
         <NewSkill handleSubmit={this.handleSubmit} />
-        <FilterSelect/>
+        <SelectFilter/>
         <AllSkills skills={this.state.skills}
                    handleDelete={this.handleDelete}
                    handleUpdate={this.handleUpdate} />
@@ -3383,10 +3382,10 @@ To make sure the FilterSelect component looks the way we want, we will add it to
     )
   }
 ```
-If everything is wired correctly, you should now see a select input with the four options in between the create skill form and the AllSkills list.
+If everything is wired up correctly, you should now see a select input with the four options in between the NewSkill form and the AllSkills list.
 <br>
 
-So now we will actually create our filtering functionality. The big picture is that we want to filter based on the level, so will start our journey by passing a filter property to our FilterSelect component.
+So now we will actually create our filtering functionality. The big picture is that we want to filter based on the level, so will start our journey by passing a handleFilter property to our SelectFilter component. This property we will call whenever we want to actually filter our skills, so we need to assign it a callback.
 
 _body.js.jsx
 ```
@@ -3394,7 +3393,7 @@ _body.js.jsx
     return (
       <div className="container">
         <NewSkill handleSubmit={this.handleSubmit} />
-        <FilterSelect filter={this.filterSkills} />
+        <SelectFilter handleFilter={this.filterSkills} />
         <AllSkills skills={this.state.skills}
                    handleDelete={this.handleDelete}
                    handleUpdate={this.handleUpdate} />
@@ -3409,15 +3408,14 @@ I am sure you noticed that inside of our filter property we have a function call
 ```
   filterSkills(value) {
     console.log("about to filter");
-    debugger;
   },
 ```
 We will add the functionality of filtering in the above filterSkills(value) function. But first, let's wire it all together and make sure that when the user changes the select dropdown, this filterSkills function is invoked.
 <br>
 
-Let's add an onChange event to our select input that will call the updateFilter function. In order to accomplish that we must bind the object 'this' to our function call.
+Let's add an onChange event to our select input that will call the updateFilter function. In order to accomplish that we must bind the object 'this' to our function call. In this case, the 'this' object refers to the `SelectFilter` component. This is important because if we did not bind 'this', when we get into the updateFilter function call we would not be able to call `this.state` or `this.props` since in that case, this would refer to the function `updateFilter`, not the component `SelectFilter`. That is a lot of this's and thats and for what its worth, this is probably the toughest part of React!
 
-_filter_selects.js.jsx
+_select_filter.js.jsx
 ```
 render (){
     return(
@@ -3432,18 +3430,18 @@ render (){
 <br>
 Now we need to create an updateFilter function within the FilterSelect component.
 
-_filter_selects.js.jsx
+_select_filter.js.jsx
 ```
 updateFilter(event) {
     this.props.filter(event.target.value)
   }
 ```
-Since we bound the object 'this' to the function call in our updateFilter, 'this' refers to the entire component. This gives us access to all of the properties of the FilterSelect component. We need the filter property, which we pass into the component when we render it in the Body. The filter property points to the filterSkills function in the Body component. Let's pass in the value of the select input, which we get from the event object.
+Since we bound the object 'this' to the function call in our `updateFilter`, 'this' refers to the entire component. This gives us access to all of the properties of the `SelectFilter` component. We need the `handleFilter` property, which we pass into the component when we render it in the Body. The `handleFilter` property points to the `filterSkills` function in the `Body` component. Let's pass in the value of the select input, which we get from the event object.
 ```
 event.target.value
 ```
 
-If everything is working properly, when you reload the page and select an option from the selector, you should hit the debugger within the filterSkills function. You should also see "about to filter" logged to the console. From the console, you can type "value" and you will get the value you selected from the dropdown.
+If everything is working properly, when you reload the page and select an option from the selector, you should see "about to filter" logged to the console. From the console, you can type "value" and you will get the value you selected from the dropdown.
 <br>
 Next we need to actually make the filterSkills function filter our skills list based on the value passed in from the select input.
 

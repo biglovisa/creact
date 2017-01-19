@@ -3340,14 +3340,13 @@ end
 ### 12. Filter Skills by Level
 ---
 
-Our next step is to filter skills based on the level. Our goal is to create a select input that has an option for each level and when changed, will show only the skills at the selected level to the user. So, for example, if the user wants to review the 'halfbad' skills they would select 'halfbad' from our soon to be created dropdown and without having to refresh the page, we would want only the skills with a level of 'halfbad' to show up in our `AllSkills` component.  
+Our next step is to filter skills based on the level. Our goal is to create a select input that has an option for each level. When the select input is changed it will show only the skills at the selected level to the user. For example, if the user wants to review the 'halfbad' skills they would select 'halfbad' from our soon to be created dropdown and without having to refresh the page, we would want only the skills with a level of 'halfbad' to show up in our `AllSkills` component.
 
 First let's create a SelectFilter component.
-
 ```
 touch app/javascripts/components/_select_filter.js.jsx
 ```
-In our _select_filter we will create a component that has a selector and label. Our `SelectFilter` class renders a Label, and a Select input with 4 (four) options (all, bad, halfbad, and fantastic).
+In our `_select_filter` we will create a component that has a selector and label. Our `SelectFilter` class renders a Label, and a Select input with four options (all, bad, halfbad, and fantastic).
 
 **app/assets/components/javascripts/_select_filter.js.jsx**
 ```
@@ -3427,9 +3426,7 @@ render (){
     
     ...
 ```
-<br>
 Now we need to create an updateFilter function within the FilterSelect component which will be invoked whenever there is a change on our element.
-
 **app/assets/components/javascripts/_select_filter.js.jsx**
 ```
 updateFilter(event) {
@@ -3454,7 +3451,7 @@ event.target.value
 ```
 If everything is working properly, when you reload the page and select an option from the selector, you should see "about to filter" logged to the console.
 <br>
-Next we need to actually make the `filterSkillsByLevel` function filter our skills list based on the value passed in from the select input. We will frist make an API call to get all the skills in our application. We do this because the user may have already filtered the list and if we just filtered the list of skills in the current state of the application, we would be working with an incomplete list.
+Next we need to actually make the `filterSkillsByLevel` function filter our skills list based on the value passed in from the select input. We will frist make an API call to get all the skills in our application. We do this because the user may have already filtered the list and if we just filtered the list of skills in the current state of the application, we might be working with an incomplete list.
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
@@ -3464,6 +3461,7 @@ filterSkillsByLevel(level) {
 }
 ```
 In the above code, the response is the full list of skills from our API call. Lets store all of the skills in a variable.
+**app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
   $.getJSON('/api/v1/skills.json', (response) => {
@@ -3473,6 +3471,7 @@ filterSkillsByLevel(level) {
 }
 ```
 Now if the level passed in to our `filterSkillsByLevel` function is 'all' we should just set the state to include all of the skills. But, if the level selected by our user is something else, we will want filter the list of skills that we got with `$.getJSON` call.
+**app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
   $.getJSON('/api/v1/skills.json', (response) => {

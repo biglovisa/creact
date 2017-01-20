@@ -3456,42 +3456,72 @@ event.target.value
 ```
 If everything is working properly, when you reload the page and select an option from the selector, you should see "about to filter" logged to the console.
 <br>
-Next we need to actually make the `filterSkillsByLevel` function filter our skills list based on the value passed in from the select input. We will frist make an API call to get all the skills in our application. We do this because the user may have already filtered the list and if we just filtered the list of skills in the current state of the application, we might be working with an incomplete list.
+Next we need to actually make the `filterSkillsByLevel` function filter our skills list based on the value passed in from the select input. Let's start by creating a variable called `newSkills` which will represent the skills we want to display for our user based on the selected level in our `SelectFilter` component.
 
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
-  $.getJSON('/api/v1/skills.json', (response) => {
-  
+  let newSkills = null;
+}
+```
+If the selected level does not equal all, then we want to filter the skills stored in `this.state.skills` based on the selected level. 
+
+**app/assets/components/javascripts/_body.js.jsx**
+```
+filterSkillsByLevel(level) {
+  let newSkills = null;
+  if (level !== 'all') {
+    let newSkills = this.state.skills.filter(skill => skill.level === level);
   }
 }
 ```
-In the above code, the response is the full list of skills from our API call. Lets store all of the skills in a variable.
+Now if the level passed in to our `filterSkillsByLevel` function is 'all' newSkills will be null, which is falsey. Otherwise it will be an array of skills with level equal to the passed in level. All we need to do is set the state of our app like this:
 
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
-  $.getJSON('/api/v1/skills.json', (response) => {
-    let skills = response
-    
+  let newSkills = null;
+  if (level !== 'all') {
+    let newSkills = this.state.skills.filter(skill => skill.level === level);
   }
-}
-```
-Now if the level passed in to our `filterSkillsByLevel` function is 'all' we should just set the state to include all of the skills. But, if the level selected by our user is something else, we will want filter the list of skills that we got with `$.getJSON` call.
-
-**app/assets/components/javascripts/_body.js.jsx**
-```
-filterSkillsByLevel(level) {
-  $.getJSON('/api/v1/skills.json', (response) => {
-    let skills = response
-    if (level !== 'all') {
-      skills = skills.filter((skill) => { return skill.level === level })
-    };
-    this.setState({skills: skills})
-  });    
+  this.setState({filteredSkills: newSkills});  
 },
 ```
-At the end of the `filterSkillsByLevel` we are setting the state of our application, which will re-render the `AllSkills` component and give the user the feel of a very snappy filter experience. We did it!
+
+We are also going to add the `filteredSkills` property to our initizalize function. We do this to show explicitely what the initial state of our component should be.
+
+**app/assets/components/javascripts/_body.js.jsx**
+```
+getInitialState() {
+  return { skills: [], filteredSkills: null }
+},
+```
+
+The last thing we need to do is selectively render all the skills in `this.state.skills` if there is no filter being applied (e.g. 'all' is selected) or render the skills in `this.state.filteredSkills`. To do this we are going to use the `||` operator which will return the value on the left side if it is truthy and otherwise return the value on the right. Looking at our render function in our `Body` component we'll make the following change in how we render the `AllSkills` component:
+```
+<AllSkills skills={this.state.filteredSkills || this.state.skills}
+                   handleDelete={this.handleDelete}
+                   handleUpdate={this.handleUpdate} />
+```
+In the above code, when the `AllSkills` component is rendered, it will first set the property `skills`. To do so it will look at `this.state.filteredSkills`. If `this.state.filteredSkills` is truthy it will take `this.state.filteredSkills` for the `skills` property, otherwise it will store `this.state.skills` as the skills property. `this.state.filteredSkills` will be null when the component is first rendered, so it will evaluate to be false. It will also be null when the user selects 'all' from the `selectFilter` component. In both of these cases, the `AllSkills` component will render with `this.state.skills` or all the skills as its `skills` property. However, if a filter value is selected, `this.state.filterSkills` will be an array of filtered skills and therefore evaluate to be true. In that case, the `AllSkills` component will render with the filtered skills stored in `this.state.filterSkills` as its `skills` property.
+
+All together our updated render function will look like this:
+
+**app/assets/components/javascripts/_body.js.jsx**
+```
+render() {
+    return (
+      <div className="container">
+        <NewSkill handleSubmit={this.handleSubmit} />
+        <SelectFilter handleFilter={this.filterSkillsByLevel} />
+        <AllSkills skills={this.state.filteredSkills || this.state.skills}
+                   handleDelete={this.handleDelete}
+                   handleUpdate={this.handleUpdate} />
+      </div>
+    )
+  }
+```
+Now we have a very snappy feeling filter function. We did it!
 
 ### 13. You are awesome
 ---

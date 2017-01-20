@@ -17,7 +17,8 @@ In this tutorial we are going to clone down a repo with a Rails API and build ou
 * [9. Edit a skill](https://github.com/applegrain/creact/blob/master/README.md#9-edit-a-skill)
 * [10. Updating the level of a skill](https://github.com/applegrain/creact/blob/master/README.md#10-updating-the-level-of-a-skill)
 * [11. Refactor](https://github.com/applegrain/creact/blob/master/README.md#11-refactor)
-* [12. You are awesome](https://github.com/applegrain/creact/blob/master/README.md#12-you-are-awesome)
+* [12. Filter Skills by Level](https://github.com/PlanetEfficacy/creact/blob/master/README.md#12-filter-skills-by-level-1)
+* [13. You are awesome](https://github.com/applegrain/creact/blob/master/README.md#12-you-are-awesome)
 
 <br>
 

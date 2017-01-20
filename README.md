@@ -3500,8 +3500,8 @@ getInitialState() {
 The last thing we need to do is selectively render all the skills in `this.state.skills` if there is no filter being applied (e.g. 'all' is selected) or render the skills in `this.state.filteredSkills`. To do this we are going to use the `||` operator which will return the value on the left side if it is truthy and otherwise return the value on the right. Looking at our render function in our `Body` component we'll make the following change in how we render the `AllSkills` component:
 ```
 <AllSkills skills={this.state.filteredSkills || this.state.skills}
-                   handleDelete={this.handleDelete}
-                   handleUpdate={this.handleUpdate} />
+           handleDelete={this.handleDelete}
+           handleUpdate={this.handleUpdate} />
 ```
 In the above code, when the `AllSkills` component is rendered, it will first set the property `skills`. To do so it will look at `this.state.filteredSkills`. If `this.state.filteredSkills` is truthy it will take `this.state.filteredSkills` for the `skills` property, otherwise it will store `this.state.skills` as the skills property. `this.state.filteredSkills` will be null when the component is first rendered, so it will evaluate to be false. It will also be null when the user selects 'all' from the `selectFilter` component. In both of these cases, the `AllSkills` component will render with `this.state.skills` or all the skills as its `skills` property. However, if a filter value is selected, `this.state.filterSkills` will be an array of filtered skills and therefore evaluate to be true. In that case, the `AllSkills` component will render with the filtered skills stored in `this.state.filterSkills` as its `skills` property.
 

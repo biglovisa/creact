@@ -3371,6 +3371,7 @@ var SelectFilter = React.createClass({
 <br>
 
 To make sure the `SelectFilter` component looks the way we want, we will add it to the `Body` component in our `_body.js.jsx` file, fire up the server (if you haven't yet done so) with `rails s`, and then navigate to `localhost:3000`.
+
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 render() {
@@ -3388,6 +3389,7 @@ render() {
 If everything is wired up correctly, you should now see a select input with the four options in between the `NewSkill` form and the `AllSkills` list.
 <br>
 Now we will actually create our filtering functionality. The big picture is that we want to filter based on the level, so we will start our journey by passing a `handleFilter` property to our `SelectFilter` component. This property we will call whenever we want to actually filter our skills, so we need to assign it a callback - `this.filterSkillsByLevel`.
+
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 render() {
@@ -3404,6 +3406,7 @@ render() {
 ```
 <br>
 I am sure you noticed that inside of our `handleFilter` property we have a function called `filterSkillsByLevel`, so let's go ahead and create that within our `_body.js.jsx`.
+
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
@@ -3427,6 +3430,7 @@ render (){
     ...
 ```
 Now we need to create an updateFilter function within the FilterSelect component which will be invoked whenever there is a change on our element.
+
 **app/assets/components/javascripts/_select_filter.js.jsx**
 ```
 updateFilter(event) {
@@ -3452,6 +3456,7 @@ event.target.value
 If everything is working properly, when you reload the page and select an option from the selector, you should see "about to filter" logged to the console.
 <br>
 Next we need to actually make the `filterSkillsByLevel` function filter our skills list based on the value passed in from the select input. We will frist make an API call to get all the skills in our application. We do this because the user may have already filtered the list and if we just filtered the list of skills in the current state of the application, we might be working with an incomplete list.
+
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
@@ -3461,6 +3466,7 @@ filterSkillsByLevel(level) {
 }
 ```
 In the above code, the response is the full list of skills from our API call. Lets store all of the skills in a variable.
+
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {
@@ -3471,6 +3477,7 @@ filterSkillsByLevel(level) {
 }
 ```
 Now if the level passed in to our `filterSkillsByLevel` function is 'all' we should just set the state to include all of the skills. But, if the level selected by our user is something else, we will want filter the list of skills that we got with `$.getJSON` call.
+
 **app/assets/components/javascripts/_body.js.jsx**
 ```
 filterSkillsByLevel(level) {

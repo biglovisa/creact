@@ -3414,7 +3414,8 @@ filterSkillsByLevel(level) {
 },
 ```
 We will add the functionality of filtering in the above `filterSkillsByLevel(level)` function. But first, let's wire it all together and make sure that when the user changes the select dropdown, this `filterSkillsByLevel` function is invoked.
-<br>
+
+
 Let's add an `onChange` event to our select input that will call the `updateFilter` function. In order to accomplish that we must bind the object 'this' to our function call. In this case, the 'this' object refers to the `SelectFilter` component. This is important because if we did not bind 'this', when we get into the updateFilter function call we would not be able to call `this.state` or `this.props` since in that case, this would refer to the function `updateFilter`, not the component `SelectFilter`. That is a lot of this's and thats and for what its worth, this is probably the toughest part of React!
 
 **app/assets/components/javascripts/_select_filter.js.jsx**

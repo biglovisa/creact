@@ -1677,7 +1677,6 @@ I am sure you noticed that inside of our filter property we have a function call
   },
 ```
 We will add the functionality of filtering in the above filterSkills(value) function. But first, let's wire it all together and make sure that when the user changes the select dropdown, this filterSkills function is invoked.
-<br>
 
 Let's add an onChange event to our select input that will call the updateFilter function. In order to accomplish that we must bind the object 'this' to our function call.
 
@@ -1708,7 +1707,7 @@ event.target.value
 ```
 
 If everything is working properly, when you reload the page and select an option from the selector, you should hit the debugger within the filterSkills function. You should also see "about to filter" logged to the console. From the console, you can type "value" and you will get the value you selected from the dropdown.
-<br>
+
 Next we need to actually make the filterSkills function filter our skills list based on the value passed in from the select input.
 
 _body.js.jsx
@@ -3450,7 +3449,7 @@ Remember, since we bound the object 'this' to the function call in our `updateFi
                                        \
                                       Skills * n
 ```
-For additioanl context, in the above diagram when the user selects a value to filter by in the `SelectFilter` component, the `handleFilter` property is invoked which sends a message up to the `body` component, which in turn re-renders the list of visible skills.
+For additional context, in the above diagram when the user selects a value to filter by in the `SelectFilter` component, the `handleFilter` property is invoked which sends a message up to the `body` component. This message then changes the state of our `body` component which in turn re-renders the list of visible skills.
 
 Let's pass in the value of the select input from the `SelectFilter` to the `Body`, which we get from the event object.
 ```

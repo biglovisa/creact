@@ -266,7 +266,7 @@ return (
 
 <br>
 
-Let's build out the component hierarchy. We are going to implement basic CRUD functionality; **create**, **read***, **update**, **delete**. Our `Main` component could render a `Header` and a `Body`. In the `Body`, we need to be able to view all skills, create a new skill, edit a skill and delete a skill. So, `Body` could render `<NewSkill />` and `<AllSkills />`. `NewSkill` is a form to create new skills and `AllSkills` renders a collection of individual `Skill` components - each `Skill` component has it's own delete and edit button.
+Let's build out the component hierarchy. We are going to implement basic CRUD functionality; **c**reate, **r**ead, **u**pdate, **d**elete. Our `Main` component could render a `Header` and a `Body`. In the `Body`, we need to be able to view all skills, create a new skill, edit a skill and delete a skill. So, `Body` could render `<NewSkill />` and `<AllSkills />`. `NewSkill` is a form to create new skills and `AllSkills` renders a collection of individual `Skill` components - each `Skill` component has it's own delete and edit button.
 
 <br>
 
@@ -334,7 +334,7 @@ Our next step is to fetch all skills from the server. We will use Ajax to ping t
 
 React components have some built in methods available that execute during different points during a component's lifecycle. Some examples include functions that execute before/after a component mounts on the DOM and before/after it dismounts. In this case, we want a method that renders once when the component is mounted on the DOM. We are going to use `componentDidMount()` which is called right after the component is mounted. For more details about methods that are available to components and when to use them, check out the [docs](https://facebook.github.io/react/docs/component-specs.html).
 
-Let's add a `componentDidMount()` function and just `console.log()` something so we now it's being called.
+Let's add a `componentDidMount()` function and just `console.log()` something so we know it's being called.
 
 <br>
 

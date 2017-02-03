@@ -53,17 +53,9 @@ $ bundle exec rails s
 ### 1. What's already here?
 ---
 
-If you start the server and go to `http://localhost:3000` you'll see an `h1` tag
-and many skills - each with a name, details and a level set as [enum](http://guides.rubyonrails.org/4_1_release_notes.html#active-record-enums). The seed data doesn't
-really reflect the fact that it is a skill. Feel free to change the [Faker](https://github.com/stympy/faker) options
-in `db/seeds.rb`.
+If you start the server and go to `http://localhost:3000` you'll see an `h1` tag and many skills - each with a name, details and a level set as [enum](http://guides.rubyonrails.org/4_1_release_notes.html#active-record-enums). The seed data doesn't really reflect the fact that it is a skill. Feel free to change the [Faker](https://github.com/stympy/faker) options in `db/seeds.rb`.
 
-In `config/routes.rb` there is already a root path set up. This will be the
-only route we are going to use. We also have a `app/controllers/site_controller.rb` with
-an index action that passes the instance variable `@skills` to the view. In the view,
-`app/views/site/index.html.erb`, we are iterating over `@skills` to render all the
-skills on the DOM. Later we are going to delete the instance variable in the action
-and have an almost empty view.
+In `config/routes.rb` there is already a root path set up. This will be the only route we are going to use. We also have a `app/controllers/site_controller.rb` with an index action that passes the instance variable `@skills` to the view. In the view, `app/views/site/index.html.erb`, we are iterating over `@skills` to render all the skills on the DOM. Later we are going to delete the instance variable in the action and have an almost empty view.
 
 In `config/routes.rb` there is also routes for `Api::V1::Skills`. The json API is already built out with the necessary actions. In `app/controllers/api/v1/skills_controller.rb` we are serving json from four endpoints.
 
@@ -76,10 +68,8 @@ Further resources on building a json API
 ### 2. Adding React to your Rails project
 ---
 
-[React.js](https://facebook.github.io/react/) is a "JavaScript library for building user interfaces". It's a tiny framework used to build your view layer. React can be used in combination with almost any back
-end, and can be combined with other front end frameworks as well. React, can be sprinkled in
-anywhere in your Rails application. React could be used for a search bar, be part of the nav
-bar or be used for the whole page.
+[React.js](https://facebook.github.io/react/) is a "JavaScript library for building user interfaces". It's a tiny framework used to build your view layer. React can be used in combination with almost any back end, and can be combined with other front end frameworks as well. React, can be sprinkled in
+anywhere in your Rails application. React could be used for a search bar, be part of the nav bar or be used for the whole page.
 
 React is a JavaScript library but fortunately we can use the [react-rails](https://github.com/reactjs/react-rails) gem that enables us to use React and JSX in our Rails application. You'll get more familiar with JSX a bit further down but it's basically the equivalent to erb. It's how we mix JavaScript with HTML - the same way we can mix Ruby with HTML when we use erb.
 
@@ -436,7 +426,7 @@ We might eventually want to create a `Skill` component for each object in the sk
 
 <br>
 
-The return value from the `this.state.skills.map...` will be an array of HTML divs, each with an `h3` and two `p` tags (if you don't believe me, log the return value and look). As you can see, inserted JavaScript needs to be enclosed in curly braces - the erb equivalent to this would be `<%= %>`. In the return statement we have replaced the `h1` tag with the skills array we built above. In the return statement we write JSX and our skills array is JavaScript, so in order for it to be evaluated it needs to be wrapped in curly braces. Head over to the browser and make sure it all works ok!
+The return value from the `this.state.skills.map...` will be an array of HTML divs, each with an `h3` and two `p` tags (if you don't believe me, log the return value and look). As you can see, inserted JavaScript needs to be enclosed in curly braces - the erb equivalent to this would be `<%= some_ruby_here %>`. In the return statement we have replaced the `h1` tag with the skills array we built above. In the return statement we write JSX and our skills array is JavaScript, so in order for it to be evaluated it needs to be wrapped in curly braces. Head over to the browser and make sure it all works ok!
 
 You should see an error like this in the browser console:
 
@@ -496,16 +486,22 @@ var NewSkill = React.createClass({
 
 <br>
 
-What do we need to create a new skill? We need a form where the user can enter a name and details and a submit button which will take the input from the form and send it over to the API and add the skill to the database. Let's start with the form. We are just going to use regular HTML to get the form and the submit button on the page. We add the refs to input fields to be able to fetch their value using `this.refs.name.value && this.refs.details.value`. More info on [refs](https://facebook.github.io/react/docs/more-about-refs.html).
+What do we need to create a new skill? We need a form where the user can enter a name and details and a submit button which will take the input from the form and send it over to the API and add the skill to the database. Let's start with the form. We are just going to use regular HTML to get the form and the submit button on the page.
+
+When we are submitting this new skill, we need to grab the text contents of the two input fields, the `name` and the `details`, and store it in our database. In the earlier days of React, we could have used [refs](https://facebook.github.io/react/docs/refs-and-the-dom.html), but nowadays it's more common to use an `onChange` handler and store the text on state. As you can see below, in the `onChange` handlers we are executing an anonymous function which takes an `event` object as its argument, and then sets the state of `name` or `details` to the current text value.
 
 <br>
 
 **app/assets/javascripts/components/_new_skill.js.jsx**
 ```
+getInitialState() {
+  return { name: '', details: '' }
+},
+
 return (
   <div>
-    <input ref='name' placeholder='Enter name of skill' />
-    <input ref='details' placeholder='Details' />
+    <input onChange={ (e) => this.setState({ name: e.target.value }) } placeholder='Enter name of skill' />
+    <input onChange={ (e) => this.setState({ details: e.target.value }) } placeholder='Details' />
     <button>Submit</button>
   </div>
 )
@@ -545,12 +541,10 @@ Check in the browser if it works and... great! Now, we need to fetch the form va
 <br>
 
 ```
-var name    = this.refs.name.value;
-var details = this.refs.details.value;
+var name    = this.state.name;
+var details = this.state.details;
 console.log(name, details);
 ```
-
-if `this.refs.name.value` and/or `this.refs.details.value` are returning `undefined`, put a debugger in the function and try to access the input values like this instead: `this.refs.name.getDOMNode().value` and `this.refs.details.getDOMNode().value`.
 
 <br>
 
@@ -560,8 +554,8 @@ Let's send the form values over to the server so we can create a new skill.
 
 ```
 handleClick() {
-  var name    = this.refs.name.value;
-  var details = this.refs.details.value;
+  var name    = this.state.name;
+  var details = this.state.details;
 
   $.ajax({
     url: '/api/v1/skills',
@@ -750,8 +744,8 @@ var AllSkills = React.createClass({
 ```
 var NewSkill = React.createClass({
   handleClick() {
-    var name    = this.refs.name.value;
-    var details = this.refs.details.value;
+    var name    = this.state.name;
+    var details = this.state.details;
 
     $.ajax({
       url: '/api/v1/skills',
@@ -766,8 +760,8 @@ var NewSkill = React.createClass({
   render() {
     return (
       <div>
-        <input ref='name' placeholder='Enter name of skill' />
-        <input ref='details' placeholder='Details' />
+        <input onChange={ (e) => this.setState({ name: e.target.value }) } placeholder='Enter name of skill' />
+        <input onChange={ (e) => this.setState({ details: e.target.value }) } placeholder='Details' />
         <button onClick={this.handleClick}>Submit</button>
       </div>
     )
@@ -826,7 +820,7 @@ var AllSkills = React.createClass({
 
 Does it log to the browser console? Cool, we are good to go. Earlier I said that we were going to add a `Skill` component for each skill, but we aren't feeling any obvious pains from this setup, so let's keep it like it is.
 
-The component needs to communicate with the parent and tell it to delete the idea that was clicked. Like we passed down a function reference to `NewSkill`, we are going to pass down a function reference that the child can execute when we click the `delete` button.
+The component needs to communicate with the parent and tell it to delete the idea that was clicked. Like we passed down a function `ref`erence to `NewSkill`, we are going to pass down a function reference that the child can execute when we click the `delete` button.
 
 <br>
 
@@ -867,7 +861,7 @@ We have one pretty obvious problem to solve before we continue. How does the pro
 
 If we use the skill id and pass it as an argument to `this.props.handleDelete()` we can easily filter the correct skill out by filtering out the skill with a matching id.
 
-Let's use our dear friend `bind()` - the first argument in `bind()` is the value to be passed as the `this` value when the function is executed and consecutive arguments will be passed to the bound function as arguments.
+Let's use our friend `bind()` - the first argument in `bind()` is the value to be passed as the `this` value when the function is executed and consecutive arguments will be passed to the bound function as arguments.
 
 <br>
 
@@ -1145,18 +1139,24 @@ handleEdit() {
 
 <br>
 
-But now, when we click `Submit`, we need to fetch the updated values and send them over to the server to update the given skill. We can do this using component `refs`, same way we got the values from the input fields when we created new skills. Let's add the refs to the input field and the textarea in `Skill` (forgot to carry those over when we extracted the skill to its own component).
+But now, when we click `Submit`, we need to fetch the updated values and send them over to the server to update the given skill. We can do this using the same strategy we deployed in `_new_skill.js.jsx`. Let's add the `onChange` callback to the input field and the textarea in `Skill` (forgot to carry those over when we extracted the skill to its own component).
 
 <br>
 
 ```
+getInitialState() {
+  return { name: '', details: '' }
+},
+
+....
+
 var name = this.state.editable ? <input type='text'
-                                        ref='name'
+                                        onChange={ (e) => this.setState({ name: e.target.value }) }
                                         defaultValue={this.props.skill.name} />
                                : <h3>{this.props.skill.name}</h3>
 
 var details = this.state.editable ? <textarea type='text'
-                                              ref='details'
+                                              onChange={ (e) => this.setState({ details: e.target.value }) }
                                               defaultValue={this.props.skill.details}>
                                     </textarea>
                                   : <p>{this.props.skill.details}</p>
@@ -1172,8 +1172,8 @@ Let's add some code to `handleEdit()`.
 
 ```
 if (this.state.editable) {
-  var name    = this.refs.name.value;
-  var details = this.refs.details.value;
+  var name    = this.state.name;
+  var details = this.state.details;
   console.log('in handleEdit', this.state.editable, name, details);
   this.onUpdate();
 }
@@ -1195,8 +1195,8 @@ Fetch the values, compose a skill object and trigger the chain by executing the 
 ```
 onUpdate() {
   if (this.state.editable) {
-    var name    = this.refs.name.value;
-    var details = this.refs.details.value;
+    var name    = this.state.name;
+    var details = this.state.details;
     var skill = { name: name, details: details }
 
     this.props.handleUpdate(skill);
@@ -1262,8 +1262,8 @@ Since `this.state.skills` is an array of objects it makes most sense to just swa
 
 ```
 var id      = this.props.skill.id;
-var name    = this.refs.name.value;
-var details = this.refs.details.value;
+var name    = this.state.name;
+var details = this.state.details;
 var level   = this.props.skill.level;
 
 var skill = {id: id, name: name, details: details, level: level }
@@ -1534,8 +1534,8 @@ This looks better, but there is more to do in this component. `onUpdate()` can b
 onUpdate() {
   if (this.state.editable) {
     var skill   = { id: this.props.skill.id,
-                    name: this.refs.name.value,
-                    details: this.refs.details.value,
+                    name: this.state.name,
+                    details: this.state.details,
                     level: this.props.skill.level }
 
     this.props.handleUpdate(skill);

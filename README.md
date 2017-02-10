@@ -255,7 +255,7 @@ return (
 
 <br>
 
-Let's build out the component hierarchy. We are going to implement basic CRUD functionality; **create**, **read***, **update**, **delete**. Our `Main` component could render a `Header` and a `Body`. In the `Body`, we need to be able to view all skills, create a new skill, edit a skill and delete a skill. So, `Body` could render `<NewSkill />` and `<AllSkills />`. `NewSkill` is a form to create new skills and `AllSkills` renders a collection of individual `Skill` components - each `Skill` component has it's own delete and edit button.
+Let's build out the component hierarchy. We are going to implement basic CRUD functionality; **c**reate, **r**ead, **u**pdate, **d**elete. Our `Main` component could render a `Header` and a `Body`. In the `Body`, we need to be able to view all skills, create a new skill, edit a skill and delete a skill. So, `Body` could render `<NewSkill />` and `<AllSkills />`. `NewSkill` is a form to create new skills and `AllSkills` renders a collection of individual `Skill` components - each `Skill` component has it's own delete and edit button.
 
 <br>
 

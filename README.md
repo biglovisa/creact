@@ -7,7 +7,7 @@ In this tutorial we are going to clone down a repo with a Rails API and build ou
 
 * [0. Up and running](https://github.com/applegrain/creact/blob/master/README.md#0-up-and-running)
 * [1. What's already here?](https://github.com/applegrain/creact/blob/master/README.md#1-whats-already-here)
-* [2. Adding React to your Rails project](https://github.com/applegrain/creact/blob/master/README.md#2-adding-react-to-your-rrails-project)
+* [2. Adding React to your Rails project](https://github.com/applegrain/creact/blob/master/README.md#2-adding-react-to-your-rails-project)
 * [3. Component Hierarchy](https://github.com/applegrain/creact/blob/master/README.md#3-component-hierarchy)
 * [4. Our first React component](https://github.com/applegrain/creact/blob/master/README.md#4-our-first-react-component)
 * [5. Hello, Creact!](https://github.com/applegrain/creact/blob/master/README.md#5-hello-creact)
@@ -17,8 +17,8 @@ In this tutorial we are going to clone down a repo with a Rails API and build ou
 * [9. Edit a skill](https://github.com/applegrain/creact/blob/master/README.md#9-edit-a-skill)
 * [10. Updating the level of a skill](https://github.com/applegrain/creact/blob/master/README.md#10-updating-the-level-of-a-skill)
 * [11. Refactor](https://github.com/applegrain/creact/blob/master/README.md#11-refactor)
-* [12. Filter Skills by Level](https://github.com/PlanetEfficacy/creact/blob/master/README.md#12-filter-skills-by-level-1)
-* [13. You are awesome](https://github.com/applegrain/creact/blob/master/README.md#12-you-are-awesome)
+* [12. Filter Skills by Level](https://github.com/applegrain/creact/blob/master/README.md#12-filter-skills-by-level-1)
+* [13. You are awesome](https://github.com/applegrain/creact/blob/master/README.md#13-you-are-awesome)
 
 <br>
 
@@ -161,7 +161,7 @@ additional resources on component hierarchy:
 - [Thinking in React](https://facebook.github.io/react/docs/thinking-in-react.html)
 - [Video](http://tagtree.tv/thinking-in-react) tutorial that walks through the code used in above article
 
-### 4. Our first component
+### 4. Our first React component
 ---
 
 Now we need to connect our Rails views to our (yet non-existent) React code. First, add a file to the components directory. This will be our main file.

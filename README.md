@@ -565,6 +565,8 @@ handleClick() {
       console.log('it worked!', response);
     }
   });
+    this.refs.name.value = '';
+    this.refs.details.value = '';
 },
 
 ```

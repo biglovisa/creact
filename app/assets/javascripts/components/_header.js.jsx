@@ -1,9 +1,9 @@
 var Header = React.createClass({
   render() {
-    return(
+    return (
       <div>
-        <h1>Creact</h1>
+        <h1>Apple</h1>
       </div>
     )
   }
-});
+})
